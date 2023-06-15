@@ -3,7 +3,8 @@
 .main-header{
     height: 8vh;
     width: 100%;
-    background-color: #0000006d;
+    background-color: #204d59f1;
+    
         color: rgb(255, 255, 255);
         border-bottom: 1px solid rgba(0,0,0,0.1);
         z-index: 99;
@@ -42,7 +43,12 @@
             }
         }
         .right{
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
             ul{
+            margin-top: 10px;
+            justify-content: center;
             display: flex;
             flex-direction: row;
             gap: 20px;
