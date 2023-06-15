@@ -1,0 +1,64 @@
+@import "../../css-config/mixins.scss";
+// This is Called nested css and it boost the speed of writing css
+.main-header{
+    height: 8vh;
+    width: 100%;
+    background-color: #0000006d;
+        color: rgb(255, 255, 255);
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        z-index: 99;
+    @include md{
+        width: 100%;
+        height: 6.25vh;
+        // padding: 0 auto;
+        background-color: #0000006d;
+        color: rgb(255, 255, 255);
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        z-index: 99;
+    }
+    
+    .header-content{
+        margin: 0 auto;
+        padding: 0 10px;
+        width: 90%;
+        // border: 3px solid red;
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        height: 50px; 
+        @include md{
+        max-width: 1200px;
+        margin: 0 auto;  
+        height: 50px;
+        }
+        .logo{
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            color: rgb(255, 255, 255);
+            text-transform: uppercase;
+            @include md{
+                font-size: 32px;
+            }
+        }
+        .right{
+            ul{
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            list-style: none;
+            font-weight: 700;
+            }
+        }
+    }
+    &.sticky-header{
+        position: sticky;
+        top: 0;
+        animation: stickyHeader 0.3s ease forwards;
+         transform: translateY(-80px);
+        
+    }
+}
+
+
+
