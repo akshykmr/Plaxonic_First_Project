@@ -91,10 +91,10 @@ const Input_form = (props) => {
 
       const handleFileChange = (event) => {
         const files = event.target.files;
-        const newList = [...imageList];
-        for (let i = 0; i < files.length; i++) {
+        // const newList = [...imageList];
+        // for (let i = 0; i < files.length; i++) {
           const reader = new FileReader();
-          const file = files[i];
+          const file = files[0];
           // const imageObj = {
           //   name: file.name,
           //   type: file.type,
@@ -102,11 +102,11 @@ const Input_form = (props) => {
           // };
           reader.onload = () => {
             const imageDataURL = reader.result;
-            newList.push(imageDataURL);
-            setImageList(newList);
+            // newList.push(imageDataURL);
+            setImageList([imageDataURL]);
           };
           reader.readAsDataURL(file);
-        }
+        // }
       };
       
 
@@ -117,13 +117,17 @@ const Input_form = (props) => {
           Purchase_Year : "",           
           Transmission : "",          
           Fuel_Type : "",  }); // to clear the input fields in input area/box
-          setResult({...formData}); // creates the copy with key value pairs of formData object
-          setMessage("Your response has been submitted")   
+          setResult({...formData, imageList});
+          setMessage("Your response has been submitted") ;  
+          setTimeout(function() {
+            setMessage("");
+          }, 4000);
          
       };
       useEffect(() => {
         props.getInputData(result);
           // console.log("this is result" ,formData)
+          // console.log("image list is" ,imageList[0])
       },[result]);
 
       const handleClear = () => {
@@ -142,7 +146,7 @@ const Input_form = (props) => {
       };
 
 
-    const resultt = JSON.stringify(formData);
+    // const resultt = JSON.stringify(formData);
 
 
 
@@ -151,6 +155,8 @@ const Input_form = (props) => {
           <div className="form-page">
             <div className="form-container">
                   <div className="form-inputs">
+
+
                   {[...Array(5)].map((_, index) => {
                         return (
                           <InputSection
@@ -163,8 +169,11 @@ const Input_form = (props) => {
                           />
                         );
                       })}
+
+
+
                       <div className="input-group input-group-sm  mb-4">
-                       <input type="file" accept="image/*" multiple onChange={handleFileChange} required />
+                       <input type="file" accept="image/*" multiple={false} onChange={handleFileChange} required />
                   </div>
                   <button  type="submit" className="btn btn-success" >Submit</button>
               <button type="button" onClick={handleClear}className="btn btn-outline-danger" >Clear</button>
@@ -182,13 +191,13 @@ const Input_form = (props) => {
                   
               
               
-              <div className="result"  style={{
+              {/* <div className="result"  style={{
                   margin:"0 auto",
                   display:'flex',
                   flexDirection:"column",
                  }}>
                  Output :  { result ? resultt : "not found"}
-              </div>  
+              </div>   */}
               <button onClick={autofillData}>autofill</button>
               </div>
             </div>

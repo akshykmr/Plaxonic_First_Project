@@ -1,78 +1,78 @@
 import React, { useState } from 'react';
 import './Output_page.scss';
-import {RiPoliceCarLine} from 'react-icons/ri';
+// import IMG from '../../assets/25571.jpg'
+// import './card.css'
+// import {RiPoliceCarLine} from 'react-icons/ri';
 import { useEffect } from 'react';
 
 
 const Output_page = ({inputImportedData}) => {
-  const[isOuputRecieved, setIsOuputRecieved] = useState(false)
- 
-  // const [inputImportedData, setInputImportedData] = useState(false);
 
-  // const outputExportedData =(inputImportedData)=>{
-  //   setInputImportedData(inputImportedData);
-  // }
+  const[isOuputRecieved, setIsOuputRecieved] = useState(true);
+  const [cards, setCards] = useState([]);
+  const { imageList } = inputImportedData;
 
-  // useEffect(()=>{
-    // console.log("third data " ,outputExportedData);
-  // }, [outputExportedData]);
+
   useEffect(() => {
     if (inputImportedData) {
-      console.log('Third page data:', inputImportedData.Car_Name);
+      // console.log('Third page data:', inputImportedData.Car_Name);
+      setCards(prevCards => [...prevCards, inputImportedData])
       setIsOuputRecieved(true);
     }
   }, [inputImportedData]);
 
   return (
     <>
+   
+
         <div className="output-page">
             <div className="output-container">
-                {isOuputRecieved ? <div className="output-cards">
+            <ul>
+  {cards.map((card, index)=>(
+    <li key={index}>{isOuputRecieved ? 
+            <div class="Card-Layout">
+        <div class="Card-Layout-body">
+            <div class="card-body">
+                <div class="card">
                   <div className="card-details">
-                    <div className="car_details">
-                      <RiPoliceCarLine/>
-                      <span className='title'>Car Name:</span>
-                      <span>{inputImportedData.Car_Name}</span>
+                    <h4 class="mb-4">{inputImportedData.Car_Name}</h4>
+                    <span className="first-row">
+                      <h2>Car Model:</h2>
+                    <h5>{inputImportedData.Car_Modal}</h5>
+                    </span>
+                    <span className="first-row ">
+                    <h2>Purchase Year: </h2>
+                    <h5 class="mb-1" > {inputImportedData.Purchase_Year}</h5>
+                    </span>
+                    <span className="first-row">
+                    <h2>Transmission: </h2>
+                    <h5 class="mb-1" >{inputImportedData.Transmission}</h5>
+                    </span>
+                    <span className="first-row">
+                    <h2>Fuel Type: </h2>
+                    <h5>{inputImportedData.Fuel_Type}</h5> 
+                    </span>
                     </div>
-                    <div className="car_details">
-                      <RiPoliceCarLine/>
-                      <span className='title' >Car Modal:</span>
-                      <span>{inputImportedData.Car_Modal}</span>
-                    </div>
-                    <div className="car_details">
-                    <RiPoliceCarLine/>
-                    <span className='title' >Purchase Year:</span>
-                      <span>{inputImportedData.Purchase_Year}</span>
-                    </div>
-                    <div className="car_details">
-                    <RiPoliceCarLine/>
-                    <span className='title' >Transmission:</span>
-                      <span>{inputImportedData.Transmission}</span>
-                    </div>
-                    <div className="car_details">
-                      <RiPoliceCarLine/>
-                    <span className='title' >Fuel Type:</span>
-                      <span>{inputImportedData.Fuel_Type}</span>
-                    </div>
+                    <div class="img-wrap">
+                    {imageList.map((imageUrl, index) => (
+        <img key={index} src={imageUrl} alt={`Image ${index}`} />
+      ))}
                   </div>
-                  <div className="car_images">
-                    <div className="img-grid">
-                      <span>Car Image</span>
-                      {/* <img src={CARIMG} alt="" /> */}
-                      {/* <img src={CARIMG} alt="" />
-                      <img src={CARIMG} alt="" />
-                      <img src={CARIMG} alt="" />
-                      <img src={CARIMG} alt="" />
-                      <img src={CARIMG} alt="" />
-                      <img src={CARIMG} alt="" />
-                      <img src={CARIMG} alt="" /> */}
-
-                    </div>
-                  </div>
-                </div> : <div>there is nothing</div>} 
-                 
+              </div>
+             
+          </div>
+      </div>
+  </div>
+  
+  
+           : 
+           <div>there is nothing</div>} </li>
+           ))} 
+           
+         </ul>        
             </div>
         </div>
+       
     </>
   )
 }

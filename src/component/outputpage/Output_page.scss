@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
 .output-page{
     width: 100%;
     height: calc(100vh - 8vh);
@@ -6,72 +7,178 @@
     // align-items: center;
     background-color: #38899df1;
     .output-container{
-        width: 96%;
-        border: 2px solid red;
-        margin: 30px auto;
+        width: 100%;
+        height: 100%;
+        // border: 2px solid rgb(0, 255, 89);
+        // margin: 30px auto;
         padding: 10px;
         display: flex;
         flex-direction: row;
         gap: 10px;
         white-space: nowrap;
         overflow-x: auto;
-        .output-cards{
-            // height: 100%;
-            width: 25%;
-            background-color: rgb(252, 252, 252,0.5);
-            border-radius: 20px 20px;
-            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
-            padding: 30px;
-            display: inline-block;
-            
-        }
-        .card-details{
+        ul {
+            list-style: none;
+            padding-left: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid green;
+            flex-direction: row;
             gap: 10px;
-            .car_details{
-                height: 30px;
-                width: 250px;
-                background-color: rgb(255, 255, 255);
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
-                margin-top:10px;
-                justify-content: space-around;
-                align-items: center;
-                padding: 10px;
-                border-radius: 8px;
-                .title{
-                    font-weight: 500;
-                    margin-left: -35px;
-                }
+            .Card-Layout {
+                // border: 2px solid red;
+                width: 340px;
+                height: 50%;
+                -webkit-transform-style: preserve-3d;
+                transform-style: preserve-3d;
+                perspective: 1000px;
+                .Card-Layout-body {
+                    width: 100%;
+                    // border: 2px solid rgb(76, 0, 255);
+                    height: 100%;
+                    position:absolute;    
+                    top: 0;
+                    left: 0;  
+                    // -webkit-transform-style: preserve-3d;
+                    // transform-style: preserve-3d;
+                    // transition: transform 700ms 400ms ease-out; 
+                    .card-body{
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgb(26, 255, 0);
+                        position: absolute;
+                        border-radius: 6px;
+                        left: 0;
+                        top: 0;
+                        // -webkit-transform-style: preserve-3d;
+                        // transform-style: preserve-3d;
+                        // -webkit-backface-visibility: hidden;
+                        // -moz-backface-visibility: hidden;
+                        // -o-backface-visibility: hidden;
+                        // backface-visibility: hidden;
+                        box-shadow: 0 12px 35px 0 rgba(0, 0, 0, 0.07);
+                        .card{
+                            // border: 4px solid green;
+                            position: relative;
+                            padding-top: 160px;
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            z-index: 1;
+                            // -webkit-transform-style: preserve-3d;
+                            transform-style: preserve-3d;
+                            // -webkit-backface-visibility: hidden;
+                            // -moz-backface-visibility: hidden;
+                            // -o-backface-visibility: hidden;
+                            // backface-visibility: hidden;
+                            .card-details{
+                                z-index: 99;
+                                transform-style: preserve-3d;
+                                height: 100%;
+                                // border: 2px solid hotpink;
+                            h4{
+                                // position: relative;
+                                // width: 100%;
+                                // display: block;
+                                text-align: center;
+                                font-family: 'Poppins', sans-serif;
+                                font-weight: 700;
+                                text-transform: uppercase;
+                                letter-spacing: 3px;
+                                font-size: 22px;
+                                line-height: 1.7;
+                                color: #091747;;
+                                transform: translate3d(0, 0, 35px) perspective(100px);
+                              }
+                              h4:before{
+                                position: absolute;
+                                content: '';
+                                z-index: -1;
+                                background: linear-gradient(217deg, #448ad5, #b8eaf9);
+                                width: 90px;
+                                height: 70px;
+                                display: block;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                box-shadow: 0 6px 20px 0 rgba(16, 39, 112,.3);
+                                animation: border-transform 6s linear infinite;
+                              }
+                              h4:before{
+                                background: linear-gradient(217deg, #648946, #a3c984);
+                              }
+                              @keyframes border-transform{
+                                  0%,100% { border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%; } 
+                                14% { border-radius: 40% 60% 54% 46% / 49% 60% 40% 51%; } 
+                                28% { border-radius: 54% 46% 38% 62% / 49% 70% 30% 51%; } 
+                                42% { border-radius: 61% 39% 55% 45% / 61% 38% 62% 39%; } 
+                                56% { border-radius: 61% 39% 67% 33% / 70% 50% 50% 30%; } 
+                                70% { border-radius: 50% 50% 34% 66% / 56% 68% 32% 44%; } 
+                                84% { border-radius: 46% 54% 50% 50% / 35% 61% 39% 65%; } 
+                              }
+                              .first-row{
+                                padding: 0 10px;
+                                display:flex;
+                                flex-direction: row;
+                                h2{
+                                    // border: 2px solid red;
+                                    width: 130px;
+                                    text-align: left;
+                                    font-family: 'Poppins', sans-serif;
+                                    // font-weight: 700;
+                                    letter-spacing: 1px;
+                                    font-size: 12px;
+                                    color: #000000;
+                                    text-transform: uppercase;
+                                  }
+                                  h5{
+                                    text-align: center;
+                                    font-family: 'Poppins', sans-serif;
+                                    font-weight: 600;
+                                    letter-spacing: 1px;
+                                    font-size: 12px;
+                                    color: #000000;
+                                    text-transform: uppercase;
+                                  }
+                              }
+                              p{
+                                position: relative;
+                                width: 100%;
+                                display: block;
+                                text-align: center;
+                                font-family: 'Poppins', sans-serif;
+                                font-weight: 500;
+                                font-size: 14px;
+                                line-height: 1.2;
+                                letter-spacing: 1px;
+                                color: #102770;
+                                transform: translate3d(0, 0, 30px) perspective(100px);
+                              }
+                            }    
+                              .img-wrap{
+                                width: 100%;
+                                height: 50%;
+                                display: block;
+                                position: absolute;
+                                display: block;
+                                left: 0;
+                                top: 0;
+                                z-index: 1;
+                                border-top-left-radius: 6px;
+                                border-top-right-radius: 6px;
+                                overflow: hidden;
+                                width: 100%;
+                                // transform: translate3d(0, 0, 15px) perspective(100px);
+                                img{
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                              }
+                          }
+                      }
+                  }
             }
         }
-        .car_images{
-            width: 100%;
-            border: 2px solid purple;
-           .img-grid{
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            border: 2px solid rgb(9, 128, 0);
-            padding: 10px;
-            span{
-                margin: 0 auto;
-                font-weight: 500;
-            }
-            img{
-                height: 150px;
-                width: 100%;
-                border-radius: 10px;
-                border: 2px solid rgb(15, 0, 128);
-            }
-           }
-
-        }
-    } 
+    }
 }            
     
   
