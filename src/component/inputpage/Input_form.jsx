@@ -1,7 +1,11 @@
-import React from 'react'
-import { useState,useEffect } from 'react'
-import './Input_form.scss'
-
+import React,{ useState } from 'react';
+import './Input_form.scss';
+import { useNavigate } from 'react-router-dom';
+import DataContext from '../Context/context';
+import IMG from '../../assets/25571.jpg';
+import IMG1 from '../../assets/bk.png';
+import IMG2 from '../../assets/olc.png';
+ 
 
 
 
@@ -33,6 +37,8 @@ const InputSection = ({ index, handleOnChange, titles, placeholders, formData })
    ? formData.Fuel_Type
    : undefined;
 
+   const type = index === 2 ? "number" : "text";
+
   return (
     <div className="input-group input-group-sm mb-4">
       <span className="input-group-text">{titles[index]}</span>
@@ -40,11 +46,12 @@ const InputSection = ({ index, handleOnChange, titles, placeholders, formData })
         onChange={handleOnChange}
         value={value}
         name={name}
-        type="text"
+        type={type}
         className="form-control"
         placeholder={placeholders[index]}
         aria-describedby="addon-wrapping"
-        required
+        required 
+        onKeyPress={(event) => index === 2 ? (!/[0-9]/.test(event.key) && event.preventDefault()) : null}
       />
     </div>
   );
@@ -52,7 +59,16 @@ const InputSection = ({ index, handleOnChange, titles, placeholders, formData })
 
 
 
-const Input_form = (props) => {
+const Input_form = () => {
+
+  const {getInputData} = React.useContext(DataContext);
+
+  const navigate = useNavigate();
+
+  const NavigateToInputForm =()=>{
+    navigate(`/OutputPage`)
+}
+
 
     const titles = {
       0: "Car Name",
@@ -71,16 +87,18 @@ const Input_form = (props) => {
     };
     
     
-    const [formData, setformData] = useState({
+    const [formData, setformData] = React.useState({
         Car_Name : "",                
         Car_Modal : "",              
         Purchase_Year : "",           
         Transmission : "",          
         Fuel_Type : "", 
+        Car_Image : "",
     });  // to store the input text
-    const [result, setResult] = useState(false); // to store the input text and image in a array 
-    const [imageList, setImageList] = useState([]); // to store the image only
-    const [message, setMessage] = useState()
+
+    const [formDataArray, setFromDataArray] = React.useState([]);
+    const [formSubmitted, setFormSubmitted] = React.useState(false);
+    const [message, setMessage] = useState();
       
 
       const handleOnChange = (event)=> {
@@ -91,51 +109,43 @@ const Input_form = (props) => {
 
       const handleFileChange = (event) => {
         const files = event.target.files;
-        // const newList = [...imageList];
-        // for (let i = 0; i < files.length; i++) {
           const reader = new FileReader();
           const file = files[0];
-          // const imageObj = {
-          //   name: file.name,
-          //   type: file.type,
-          //   size: file.size,
-          // };
           reader.onload = () => {
             const imageDataURL = reader.result;
-            // newList.push(imageDataURL);
-            setImageList([imageDataURL]);
+          setformData({ ...formData, Car_Image: imageDataURL });
           };
           reader.readAsDataURL(file);
-        // }
       };
       
 
       const SubmitValidation = (e) => {
           e.preventDefault(); // prevents the page to reload on submit(as in default page submission it reloads the page)
-          setformData({  Car_Name : "",                
-          Car_Modal : "",              
-          Purchase_Year : "",           
-          Transmission : "",          
-          Fuel_Type : "",  }); // to clear the input fields in input area/box
-          setResult({...formData, imageList});
           setMessage("Your response has been submitted") ;  
           setTimeout(function() {
             setMessage("");
+          //  NavigateToInputForm();
           }, 4000);
-         
+          setFromDataArray(prevFormDataArray => [...prevFormDataArray, formData]);
+          setFormSubmitted(true)
+        //  console.log( "this is added data",formDataArray)
+         setformData({  Car_Name : "",                
+          Car_Modal : "",              
+          Purchase_Year : "",           
+          Transmission : "",          
+          Fuel_Type : "", 
+          }); // to clear the input fields in input area/box
       };
-      useEffect(() => {
-        props.getInputData(result);
-          // console.log("this is result" ,formData)
-          // console.log("image list is" ,imageList[0])
-      },[result]);
+      
+      
+      React.useEffect(() => {
+        if (formSubmitted) {
+          console.log("this is added data", formDataArray);
+          getInputData(formDataArray);
+        }
+      }, [formDataArray, formSubmitted]);
+     
 
-      const handleClear = () => {
-        setformData({});
-        setImageList([]);
-        setResult(false);
-      };
-  
       const autofillData=()=>{
         setformData({  Car_Name : "Toyota",                
           Car_Modal : "V4",              
@@ -144,11 +154,6 @@ const Input_form = (props) => {
           Fuel_Type : "petrol", 
         });
       };
-
-
-    // const resultt = JSON.stringify(formData);
-
-
 
     return (
       <form onSubmit={SubmitValidation}>
@@ -176,7 +181,6 @@ const Input_form = (props) => {
                        <input type="file" accept="image/*" multiple={false} onChange={handleFileChange} required />
                   </div>
                   <button  type="submit" className="btn btn-success" >Submit</button>
-              <button type="button" onClick={handleClear}className="btn btn-outline-danger" >Clear</button>
               <span className='message-text'>{message}</span>
                   </div>
 

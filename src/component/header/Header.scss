@@ -41,6 +41,9 @@
             @include md{
                 font-size: 32px;
             }
+            &:active{
+                color: rgb(74, 63, 63);
+            }
         }
         .right{
         display: flex;
@@ -54,6 +57,14 @@
             gap: 20px;
             list-style: none;
             font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            .input:active{
+                color: green;
+            }
+            .output:active{
+                color: green;
+            }
             }
         }
     }
