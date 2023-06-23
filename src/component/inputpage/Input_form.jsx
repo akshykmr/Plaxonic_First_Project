@@ -1,14 +1,18 @@
-import React,{ useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import './Input_form.scss';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import DataContext from '../Context/context';
-import IMG from '../../assets/25571.jpg';
-import IMG1 from '../../assets/bk.png';
-import IMG2 from '../../assets/olc.png';
+// import IMG from '../../assets/1.jpg'
+import IMG1 from '../../assets/2.avif'
+import IMG2 from '../../assets/3.avif'
+import IMG3 from '../../assets/4.avif'
+import IMG4 from '../../assets/5.avif'
+import IMG5 from '../../assets/6.avif'
+// import IMG6 from '../../assets/7.avif'
+// import IMG7 from '../../assets/8.avif'
+// import IMG8 from '../../assets/9.avif'
+// import IMG9 from '../../assets/10.avif'
  
-
-
-
 const InputSection = ({ index, handleOnChange, titles, placeholders, formData }) => {
 
   const name =
@@ -60,15 +64,10 @@ const InputSection = ({ index, handleOnChange, titles, placeholders, formData })
 
 
 const Input_form = () => {
-
+  
   const {getInputData} = React.useContext(DataContext);
 
-  const navigate = useNavigate();
-
-  const NavigateToInputForm =()=>{
-    navigate(`/OutputPage`)
-}
-
+  // const navigate = useNavigate();
 
     const titles = {
       0: "Car Name",
@@ -86,27 +85,29 @@ const Input_form = () => {
       4: "Enter Fuel Type"
     };
     
-    
-    const [formData, setformData] = React.useState({
-        Car_Name : "",                
+    const [formData, setformData] = React.useState({ // to store the input text
+        Car_Name : "",                 
         Car_Modal : "",              
         Purchase_Year : "",           
         Transmission : "",          
         Fuel_Type : "", 
         Car_Image : "",
-    });  // to store the input text
+    });  
 
     const [formDataArray, setFromDataArray] = React.useState([]);
     const [formSubmitted, setFormSubmitted] = React.useState(false);
     const [message, setMessage] = useState();
       
+    
+      // const NavigateToInputForm =()=>{ // this will automatically navigated to outputpage
+      //   navigate(`/OutputPage`)
+      // };
 
       const handleOnChange = (event)=> {
         const { name, value } = event.target;
           setformData({ ...formData, [name]: value });
       }
   
-
       const handleFileChange = (event) => {
         const files = event.target.files;
           const reader = new FileReader();
@@ -118,93 +119,147 @@ const Input_form = () => {
           reader.readAsDataURL(file);
       };
       
-
       const SubmitValidation = (e) => {
           e.preventDefault(); // prevents the page to reload on submit(as in default page submission it reloads the page)
-          setMessage("Your response has been submitted") ;  
-          setTimeout(function() {
-            setMessage("");
-          //  NavigateToInputForm();
-          }, 4000);
+
+          // setTimeout(function() {
+          //   setMessage("Redirecting to Result page in 3 seconds...");
+          // }, 3000);
+          // setTimeout(function() {
+          // //  NavigateToInputForm();
+          // }, 6000);
+
           setFromDataArray(prevFormDataArray => [...prevFormDataArray, formData]);
-          setFormSubmitted(true)
-        //  console.log( "this is added data",formDataArray)
+
+          setFormSubmitted(true);
+          
+
+          const responseCount = formDataArray.length + 1;
+          setMessage(`${responseCount} response${responseCount === 1 ? '' : 's'} ${responseCount === 1 ? 'has' : 'have'} been submitted.`); 
+          
+
          setformData({  Car_Name : "",                
           Car_Modal : "",              
           Purchase_Year : "",           
           Transmission : "",          
           Fuel_Type : "", 
-          }); // to clear the input fields in input area/box
+          }); // to clear the input fields in inputbox
       };
       
       
       React.useEffect(() => {
         if (formSubmitted) {
-          console.log("this is added data", formDataArray);
+          // console.log("this is added data", formDataArray);
           getInputData(formDataArray);
         }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [formDataArray, formSubmitted]);
      
 
-      const autofillData=()=>{
-        setformData({  Car_Name : "Toyota",                
-          Car_Modal : "V4",              
-          Purchase_Year : "2022",           
-          Transmission : "auto",          
-          Fuel_Type : "petrol", 
-        });
+      const randomFormData =[
+        {
+          "Car_Name": "Toyota",
+          "Car_Modal": "V4",
+          "Purchase_Year": "2022",
+          "Transmission": "auto",
+          "Fuel_Type": "petrol",
+          "Car_Image": {IMG1}
+        },
+        {
+          "Car_Name": "Honda",
+          "Car_Modal": "Civic",
+          "Purchase_Year": "2022",
+          "Transmission": "manual",
+          "Fuel_Type": "gasoline",
+          "Car_Image": {IMG2}
+        },
+        {
+          "Car_Name": "Ford",
+          "Car_Modal": "Mustang",
+          "Purchase_Year": "2022",
+          "Transmission": "auto",
+          "Fuel_Type": "petrol",
+          "Car_Image": {IMG3}
+        },
+        {
+          "Car_Name": "Chevrolet",
+          "Car_Modal": "Corvette",
+          "Purchase_Year": "2022",
+          "Transmission": "manual",
+          "Fuel_Type": "gasoline",
+          "Car_Image": {IMG4}
+        },
+        {
+          "Car_Name": "Tesla",
+          "Car_Modal": "Model S",
+          "Purchase_Year": "2022",
+          "Transmission": "auto",
+          "Fuel_Type": "electric",
+          "Car_Image": {IMG5}
+        }
+      ]
+      const autofillData = () => {
+        const randomIndex = Math.floor(Math.random() * randomFormData.length);
+        const randomData = randomFormData[randomIndex];
+        setformData(randomData);
+        // setFromDataArray(prevFormDataArray => [...prevFormDataArray, formData]);
+
+        // getInputData(formDataArray);
+
+        // // // const imageDataUrl = randomData.Car_Image.dataURL;
+        // setTimeout(() => {
+        // }, 1000);
+        // setTimeout(() => {
+        // console.log("this is autogenerated",formData);
+          
+        //   }, 000);
+
+        // const AutoformData = { 
+        //   "Car_Name": randomData.Car_Name,
+        //   "Car_Modal": randomData.Car_Modal,
+        //   "Purchase_Year": randomData.Purchase_Year,
+        //   "Transmission": randomData.Transmission,
+        //   "Fuel_Type": randomData.Fuel_Type,
+        //   "Car_Image": imageDataUrl 
+        // };
       };
+
+      // React.useEffect(() => {
+      //   if (autofillData) {
+      //     console.log("this is auto data", formData);
+      //     getInputData(formDataArray);
+      //   }
+      // // eslint-disable-next-line react-hooks/exhaustive-deps
+      // }, [formDataArray, autofillData]);
+      
+      
 
     return (
       <form onSubmit={SubmitValidation}>
-          <div className="form-page">
-            <div className="form-container">
-                  <div className="form-inputs">
-
-
-                  {[...Array(5)].map((_, index) => {
-                        return (
-                          <InputSection
-                            key={index}
-                            index={index}
-                            handleOnChange={handleOnChange}
-                            titles={titles}
-                            placeholders={placeholders}
-                            formData={formData}
-                          />
-                        );
-                      })}
-
-
-
-                      <div className="input-group input-group-sm  mb-4">
-                       <input type="file" accept="image/*" multiple={false} onChange={handleFileChange} required />
-                  </div>
-                  <button  type="submit" className="btn btn-success" >Submit</button>
-              <span className='message-text'>{message}</span>
-                  </div>
-
-                      
-
-
-
-
-
-
-
-                  
-              
-              
-              {/* <div className="result"  style={{
-                  margin:"0 auto",
-                  display:'flex',
-                  flexDirection:"column",
-                 }}>
-                 Output :  { result ? resultt : "not found"}
-              </div>   */}
-              <button onClick={autofillData}>autofill</button>
+        <div className="form-page">
+          <div className="form-container">
+            <div className="form-inputs">
+              {[...Array(5)].map((_, index) => {
+                    return (
+                      <InputSection
+                        key={index}
+                        index={index}
+                        handleOnChange={handleOnChange}
+                        titles={titles}
+                        placeholders={placeholders}
+                        formData={formData}
+                      />
+                    );
+              })}
+              <div className="input-group-img input-group-sm  mb-4">
+                <input type="file" accept="image/*" multiple={false} onChange={handleFileChange} required />
               </div>
+              <button  type="submit" className="btn btn-outline-success" >Submit</button>
+              <button className='btn btn-outline-primary' onClick={autofillData}>autofill</button>
+              <span className='message-text'>{message}</span>
             </div>
+          </div>
+        </div>
       </form>
     )
   }

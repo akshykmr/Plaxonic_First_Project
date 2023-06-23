@@ -1,7 +1,6 @@
 import "./Header.scss";
 import { useNavigate } from 'react-router-dom';
-import InputScreen from "../inputpage/Input_form";
-import OutputScree from '../outputpage/Output_page';
+
 
 
 

@@ -19,7 +19,7 @@ function App() {
 
 
   return (
-    <DataContext.Provider value ={{inputImportedData, getInputData}}>
+    <DataContext.Provider value ={{inputImportedData, getInputData,setInputImportedData}}>
     <BrowserRouter>
        <Header/>
        <Routes>

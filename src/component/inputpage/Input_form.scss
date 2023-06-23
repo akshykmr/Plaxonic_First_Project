@@ -5,10 +5,10 @@
     display:flex;
     justify-content: space-around;
     align-items: center;
-    background-color: #38899df1;
+    background-color: #fffffff1;
     .form-container{
         height: 90%;
-        background-color: rgb(252, 252, 252,0.5);
+        background-color: rgba(229, 228, 228, 0.5);
     border-radius: 20px 20px;
        box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
        padding: 50px;
@@ -23,12 +23,27 @@
                 margin-right: 10px;
             }
         }
+        .input-group-img{
+            margin: 0 auto;
+
+            input{
+                background: cornflowerblue;
+                border-radius: 5px;
+              }
+            }
+        
         .btn{
             width: 100px;
             margin: 10px auto;
         }
         .message-text{
-            margin: 0 auto;
+                margin: 0 auto;
+                // border: 2px solid rebeccapurple;
+                width: 403px;
+                justify-content: center;
+                text-align: center;
+                font-weight: 500;
+                font-size: 18px;
         }
        }
     } 
