@@ -20,7 +20,8 @@ const Header = () => {
                 <div className="right">
                     <ul>
                         <li className="input" onClick={()=>navigate(`/`)}>Input Form</li>
-                        <li className='output'onClick={()=>navigate(`/OutputPage`)}>Result</li>
+                        <li className='output'onClick={()=>navigate(`/ListView`)}>List View</li>
+                        <li className='output'onClick={()=>navigate(`/OutputPage`)}>Grid View</li>
                     </ul>
                 </div>
             </div>

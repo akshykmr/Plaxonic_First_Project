@@ -255,7 +255,8 @@ const Input_form = () => {
                 <input type="file" accept="image/*" multiple={false} onChange={handleFileChange} required />
               </div>
               <button  type="submit" className="btn btn-outline-success" >Submit</button>
-              <button className='btn btn-outline-primary' onClick={autofillData}>autofill</button>
+              <input type="button" className="btn btn-outline-primary" onClick={autofillData} value="autofill" />
+
               <span className='message-text'>{message}</span>
             </div>
           </div>
