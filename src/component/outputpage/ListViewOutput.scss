@@ -1,15 +1,54 @@
 .page_container{
     width: 100%;
+    overflow: auto;
     height: calc(100vh - 8vh);
     background-color: rgb(0, 0, 0,0.1);
     .pagebody{
        width: 80%;
        height: 100%;
        margin: 0 auto;
-       padding-top: 80px;
+       padding-top: 20px;
+       .alert {
+        padding: 10px;
+        background-color:#ff9800;
+        color: white;
+      }
+      
+      .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      
+      .closebtn:hover {
+        color: black;
+      }
+       .filter-bar{
+        width: 100%;
+        // background-color: antiquewhite;
+        padding: 10px;
+        .filter-box{
+            display: flex;
+            width: 100%;
+            // border: 2px solid red;
+            flex-direction: row;
+            justify-content: space-between;
+            .btn{
+                &:active{
+                    background-color: rebeccapurple
+                }
+            }
+        }
+       };
        .title_bar{
         //    border: 2px solid rgb(13, 33, 255);
            background-color: rgb(0, 0, 0,0.1);
+           margin-top: 20px;
            border-radius: 5px;
            ul{
                display: flex;
