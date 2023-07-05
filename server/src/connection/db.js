@@ -8,7 +8,7 @@ const connect = () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }).then(()=> {
-console.log('db Connected')
+console.log('MongoDB Connected')
 })
 
 .catch((e) =>{

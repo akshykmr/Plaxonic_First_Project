@@ -6,7 +6,10 @@ const inputDataSchema = new mongoose.Schema({
     Purchase_Year : Number,
     Transmission : String,
     Fuel_Type :  String,
-    Car_Image :  String,
+    Car_Image :  [{
+        imgUrl : String,
+        imgPublic_Id : String,
+    }],
 });
 
 const Entry = mongoose.model('Entry', inputDataSchema);

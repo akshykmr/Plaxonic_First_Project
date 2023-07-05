@@ -29,7 +29,7 @@ const ListViewOutput = () => {
         const receivedData = response.data;
         setOutputData(receivedData);
         setDataforFilter(receivedData);
-        console.log("this is imported data", receivedData);
+        // console.log("this is imported data", receivedData);
       } catch (error) {
         console.log('Error:', error);
       }
@@ -42,17 +42,23 @@ const ListViewOutput = () => {
     
     const handleRefresh = () => {
       fetchData();
+      // console.log("this is output data : ", outputData[0].Car_Image[0].imgPublic_Id);
     };
     
     
          const handleRemoveSingleItem = async (index) => {
           setClickAction(true);
           const confirmDel = window.confirm("Are you sure you want to delete the selected items?");
-          console.log("this is selected object", outputData[index]._id);
-          const objectId = outputData[index]._id;
+          // console.log("this is selected object", outputData[index]._id);
+          const objectData = {
+            objectId : outputData[index]._id,
+            objectImageDetails : outputData[index].Car_Image,
+          };
           if(confirmDel){
             try {
-              const response = await axios.delete(`http://localhost:5000/entries/${objectId}`);
+              const response = await axios.delete(`http://localhost:5000/entries/${objectData.objectId}`, {
+                data: objectData,
+              });
               console.log('Object deleted successfully:', response.data);
               // Handle any further actions after deletion
             } catch (error) {
@@ -60,6 +66,7 @@ const ListViewOutput = () => {
               // Handle error cases
             }
           }
+          console.log("this is object data for delete", objectData);
         };
 
 
@@ -71,9 +78,9 @@ const ListViewOutput = () => {
           }
         };
 
-        useEffect(()=>{
-          console.log("selected",selectedItems);
-        },[selectedItems])
+        // useEffect(()=>{
+        //   console.log("selected",selectedItems);
+        // },[selectedItems])
         
        
       const handleCheckboxClickAll = () => {
@@ -87,13 +94,18 @@ const ListViewOutput = () => {
       };
       
       const handleRemoveAllItemsList = async () => {
-        setClickAction(true);
         if (outputData && selectedItems.length > 0) {
+        setClickAction(true);
           try {
             await Promise.all(
               selectedItems.map((index) => {
-                const objectId = outputData[index]._id;
-                return axios.delete(`http://localhost:5000/entries/${objectId}`);
+                const objectData = {
+                  objectId : outputData[index]._id,
+                  objectImageDetails : outputData[index].Car_Image,
+                };
+                return axios.delete(`http://localhost:5000/entries/${objectData.objectId}`, {
+                  data: objectData,
+                });
               })
             );
             console.log('All objects deleted successfully');
@@ -108,7 +120,7 @@ const ListViewOutput = () => {
     useEffect(() => {
         if (outputData && outputData.length>0) {
           setIsOutputReceived(true);
-          console.log(outputData);
+          // console.log(outputData);
         }
         else if(outputData && outputData.length<=0){
           setIsOutputReceived(false);
@@ -308,14 +320,14 @@ const ListViewOutput = () => {
                 <ul>
                     <li>
                         <div  className="form-check">
-                           <input  className="form-check-input" type="checkbox" value={index} id="flexCheckDefault" checked={selectedItems.includes(index)}
+                           <input  className="form-check-input" type="checkbox" value={index} id="flexCheckDefault" defaultChecked={selectedItems.includes(index)}
                            onClick={() => handleCheckboxClick(index)}  />
                         </div>
                     </li>
                     <li>{index+1}</li>
                     <li>
                         <span>
-                            <img src={outputData.Car_Image} alt="" />
+                            <img src={outputData.Car_Image[0].imgUrl} alt="" />
                         </span>
                     </li>
                     <li>{outputData.Car_Name}</li>

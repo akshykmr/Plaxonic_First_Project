@@ -29,7 +29,8 @@ server/node_modules/
 server/.env
 
 # dependencies
-server//node_modules
+server/node_modules
+server/tmp
 server/.pnp
 server/.pnp.js
 

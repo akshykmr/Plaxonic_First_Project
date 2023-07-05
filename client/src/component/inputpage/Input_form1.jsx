@@ -80,7 +80,7 @@ const Input_form = () => {
         Purchase_Year : "",           
         Transmission : "",          
         Fuel_Type : "", 
-        Car_Image : "",
+        Car_Image : [],
     });  
 
     const [formSubmitted, setFormSubmitted] = React.useState(false);
@@ -96,20 +96,27 @@ const Input_form = () => {
       }
 
       const handleFileChange = (event) => {
-
-
-        //METHOD 1: {
+        //METHOD 1: { =======> FOR SINGLE FILE UPLOAD 
           // const file = event.target.files[0];
           // setformData((prevData) => ({
           //   ...prevData,
           //   Car_Image: file,
           // }));
 
-
-          /// METHOD 2
-          setformData({...formData,Car_Image:event.target.files[0]});
+          /// METHOD 2 ======> FOR SINGLE FILE UPLOAD
+          // setformData({...formData,Car_Image:event.target.files[0]});
           // console.log(event.target.files[0]);
-      };
+
+          const files = Array.from(event.target.files);
+          // const newList = [...formData.Car_Image];
+          setformData((prevData) => ({
+            ...prevData,
+            Car_Image: files,
+          }));
+        };
+        // console.log("final formdata",formData.Car_Image);
+
+
     
       useEffect(() => {
         const fetchResponseCount = async () => {
@@ -135,7 +142,9 @@ const Input_form = () => {
             formDataToSubmit.append('Purchase_Year', formData.Purchase_Year);
             formDataToSubmit.append('Transmission', formData.Transmission);
             formDataToSubmit.append('Fuel_Type', formData.Fuel_Type);
-            formDataToSubmit.append('Car_Image', formData.Car_Image, formData.Car_Image.name);
+            for (let i = 0; i < formData.Car_Image.length; i++) {
+              formDataToSubmit.append('Car_Image', formData.Car_Image[i]);
+            }
             setResponseCount((prevCount) => prevCount + 1);
             setMessage(`${responseCount + 1} response${responseCount === 0 ? '' : 's'} ${responseCount === 0 ? 'has' : 'have'} been submitted.`);
 
@@ -147,8 +156,8 @@ const Input_form = () => {
               if (!response.ok) {
                 throw new Error('Request failed');
               }
-              // const result = await response.json();
-              // console.log('Response:', result);
+              const result = await response.json();
+              console.log(' this is submited Response:', result);
             } catch (error) {
               console.error('Error:', error);
             }
@@ -166,7 +175,7 @@ const Input_form = () => {
           Purchase_Year : "",           
           Transmission : "",          
           Fuel_Type : "", 
-          Car_Image : "",
+          Car_Image : [],
         }) 
       }
       },[formSubmitted])
@@ -196,7 +205,7 @@ const Input_form = () => {
                     );
               })}
               <div className="input-group-img input-group-sm  mb-4">
-                <input type="file" accept="image/*" multiple={false} onChange={handleFileChange} required name="Car_Image" ref={fileInputRef}/>
+                <input type="file" accept="image/*" multiple onChange={handleFileChange} required name="Car_Image" ref={fileInputRef}/>
               </div>
               <button  type="submit" className="btn btn-outline-success" >Submit</button>
               <input type="button" className="btn btn-outline-primary" onClick={autofillData} value="autofill" />

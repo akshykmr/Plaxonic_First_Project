@@ -36,49 +36,83 @@ const getEntryCount = async (req, res) => {
 // POST API
 const createEntry = async (req, res) => {
   try {
-    const file = req.files.Car_Image;
-
-    cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
-      const entry = new Entry({
-        Car_Name: req.body.Car_Name,
-        Car_Modal: req.body.Car_Modal,
-        Purchase_Year: req.body.Purchase_Year,
-        Transmission: req.body.Transmission,
-        Fuel_Type: req.body.Fuel_Type,
-        Car_Image: result.url,
+    const imageFiles = req.files.Car_Image;
+    const imageFilesUrl = [];
+    
+    if (Array.isArray(imageFiles)) {
+      for (let i = 0; i < imageFiles.length; i++) {
+        const image = imageFiles[i];
+        const result = await cloudinary.uploader.upload(image.tempFilePath);
+        imageFilesUrl.push({
+          imgUrl: result.url,
+          imgPublic_Id: result.public_id,
+        });
+        // console.log("single img url", result);
+      }
+    } else {
+      const result = await cloudinary.uploader.upload(imageFiles.tempFilePath);
+      imageFilesUrl.push({
+        imgUrl: result.url,
+        imgPublic_Id: result.public_id,
       });
+      // console.log("single img url", result);
+    }
+    
 
-      entry.save()
-        .then((newEntry) => {
-          console.log("New Entry Created", newEntry);
-          res.status(201).json(newEntry);
-        })
-        .catch((error) => {
-          console.error('Error Creating Entry:',
-          error);
-res.status(500).json({ error: 'Internal Server Error' });
-});
-});
-} catch (error) {
-console.error('Error:', error);
-res.status(500).json({ error: 'Internal Server Error' });
-}
+    
+    console.log("This is image data", imageFilesUrl);
+    
+    
+    const entry = new Entry({
+      Car_Name: req.body.Car_Name,
+      Car_Modal: req.body.Car_Modal,
+      Purchase_Year: req.body.Purchase_Year,
+      Transmission: req.body.Transmission,
+      Fuel_Type: req.body.Fuel_Type,
+      Car_Image: imageFilesUrl,
+    });
+    
+    entry.save()
+      .then((newEntry) => {
+        // console.log("New Entry Created", newEntry);
+        res.status(201).json(newEntry);
+      })
+      .catch((error) => {
+        console.error('Error Creating Entry:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
+
 
 
 // DELETION API
 const deleteEntry = async (req, res) => {
-try {
-const objectId = req.params.id;
-await Entry.deleteOne({ _id: objectId });
-
-res.status(200).json({ message: 'Object deleted successfully' });
-} catch (error) {
+  try {
+    const objectId = req.params.id;
+    const objectImageData = req.body.objectImageDetails;
+    const imgPublic_Id_array = [];
+ 
+    if (Array.isArray(objectImageData)) {
+      for (let i = 0; i < objectImageData.length; i++) {
+        const public_id = objectImageData[i].imgPublic_Id;
+        imgPublic_Id_array.push(public_id);
+      }
+    }
+    console.log("array for deleting items", imgPublic_Id_array);
+    await Entry.deleteOne({ _id: objectId });
+    for (let i = 0; i < imgPublic_Id_array.length; i++) {
+      await cloudinary.uploader.destroy(imgPublic_Id_array[i]);
+    }
+    res.status(200).json({ message: 'Object deleted successfully' });
+  } catch (error) {
     console.error('Error deleting object:', error);
     res.status(500).json({ error: 'Internal Server Error' });
-    }
-    };
-    
+  }
+};
     module.exports = {
     getEntries,
     getEntryCount,
