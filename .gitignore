@@ -1,23 +1,56 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# Ignore node_modules in client and server
+client/node_modules/
+client//.pnp
+client/.pnp.js
 
 # testing
-/coverage
+client/coverage
 
 # production
-/build
+client/build
 
 # misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+client/.DS_Store
+client/.env.local
+client/.env.development.local
+client/.env.test.local
+client/.env.production.local
+
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+
+
+
+server/node_modules/
+
+# Ignore .env file in server
+server/.env
+
+# dependencies
+server//node_modules
+server/.pnp
+server/.pnp.js
+
+# testing
+server//coverage
+
+# production
+server//build
+
+# misc
+server/.DS_Store
+server/.env.local
+server/.env.development.local
+server/.env.test.local
+server/.env.production.local
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+server/node_modules/
+server/package-lock.json/
+server/.env
