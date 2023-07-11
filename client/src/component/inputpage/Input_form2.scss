@@ -1,0 +1,151 @@
+.body{
+    background: radial-gradient(circle, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 50%);
+    // width: 100%;
+    // height: 100%;
+    .bannerBkg{
+        position: relative;
+        width: 100vw;
+        height: 131vh;
+        .banner{
+            img{
+                height: 100%;
+                width: 100%;
+            }
+        }
+        .bannerPhoto{            
+            position: absolute;
+            top: 35%;
+            right: 38%;
+            img{
+                width: 60%;
+                height: 60%;
+            }
+        }
+        .bannerText{            
+            position: absolute;
+            top: 48%;
+            right: 25%;
+            img{
+                max-width: 60%;
+                height: 60%;
+            }
+        }
+        .bannerButton1{            
+            position: absolute;
+            top: 22%;
+            right: 30%;
+            img{
+                width: 60%;
+                height: 60%;
+            }
+        }
+        .bannerButton2{            
+            position: absolute;
+            top: 22%;
+            right: 32%;
+            img{
+                width: 60%;
+                height: 60%;
+            }
+        }
+        .bannerButton3{            
+            position: absolute;
+            top: 22%;
+            right: 34%;
+            img{
+                width: 60%;
+                height: 60%;
+            }
+        }
+        .bannerTree1{            
+            position: absolute;
+            top: 54.3%;
+            left: 14.57%;
+            img{
+                width: 36%;
+                animation-name: pop2;
+                -webkit-animation-name: pop2;
+                animation-duration: 1.1s;
+                -webkit-animation-duration: 1.1s;
+                animation-iteration-count: infinite;
+                -webkit-animation-iteration-count: infinite;
+                overflow-clip-margin: content-box;
+                overflow: clip;
+            }
+        }
+        .bannerTree3{            
+          position: absolute;
+          top: 40.1%;
+          right:2.4%;
+          z-index: 1;
+          img{
+              width: 58%;
+              animation-name: pop2;
+              -webkit-animation-name: pop2;
+              animation-duration: 3.3s;
+              -webkit-animation-duration: 3.3s;
+              animation-iteration-count: infinite;
+              -webkit-animation-iteration-count: infinite;
+              overflow-clip-margin: content-box;
+              overflow: clip;
+          }
+      }
+        .bannerTree2{            
+          position: absolute;
+          top: 50.1%;
+          right: -1.19%;
+          z-index: 2;
+            img{
+                width: 36%;
+                animation-name: pop2;
+                -webkit-animation-name: pop2;
+                animation-duration: 2.2s;
+                -webkit-animation-duration: 2.2s;
+                animation-iteration-count: infinite;
+                -webkit-animation-iteration-count: infinite;
+                overflow-clip-margin: content-box;
+                overflow: clip;
+            }
+        }
+        
+        @keyframes pop2 {
+          0% {
+            transform: scale(1);
+        }
+        30% {
+            transform: scale(1);
+        }
+        40% {
+            transform: scale(1.15);
+        }
+        50% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1);
+        }
+          }       
+        .bannerClock, .bannerClock2 {            
+            position: absolute;
+            top: 13.4%;
+            right: 66.8%;
+          }
+          
+          .bannerClock img,
+          .bannerClock2 img {
+            width: 60%;
+            height: 60%;
+            animation: rotate360 60s linear infinite;
+          }
+          
+          @keyframes rotate360 {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+          
+    }
+}

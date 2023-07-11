@@ -57,7 +57,7 @@ const Header = () => {
       <>
         <header className='main-header'> 
             <div className="header-content">
-                <div className="left"><span onClick={activePage === 4 ? closeNavBar : openNavBar}>{activePage === 4 ? <TbMenuOrder/> : <AiOutlineMenu/>}</span><div className="logo" onClick={handleNavigateToInputForm} >Entry Form</div>
+                <div className=" left"><span onClick={activePage === 4 ? closeNavBar : openNavBar}>{activePage === 4 ? <TbMenuOrder/> : <AiOutlineMenu/>}</span><div className="logo" onClick={handleNavigateToInputForm} >Entry Form</div>
                 </div>
                 <div className="right">
                     <ul>

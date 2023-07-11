@@ -187,7 +187,7 @@ body{
                          height: 0rem;
                          width: 100%;
                          position: absolute;
-                         transition: height .1s ease-in-out;
+                         transition: height .5s ease-in-out;
                         //  position: absolute;
                          top: -30px;
                          left: -50px;
@@ -352,5 +352,41 @@ body{
     color: rgb(255, 255, 255);
     z-index: 97;
 }
+
+@keyframes slide-in {
+    0% {
+      transform: translateX(300%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-out {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    50%{
+        transform: translateX(400%);
+        opacity: 0;
+    }
+    100% {
+      transform: translateX(1100%);
+      opacity: 0;
+    }
+  }
+  
+  
+  .animate-slide-in {
+    animation: slide-in  0.4s ease-in-out;
+  }
+  
+  .animate-slide-out {
+    animation: slide-out 0.9s ease-in-out forwards; // farwards hide the element and element will not appear again after the animation completed
+  }
+  
 
 
