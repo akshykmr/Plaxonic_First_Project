@@ -21,6 +21,25 @@ const getEntries = async (req, res) => {
   }
 };
 
+const getSingleObject = async (req, res) => {
+  try {
+    let objectId;
+    (() => {
+      if (typeof req.params.id === 'string') {
+        objectId = req.params.id.replace(/"/g, '')  ;
+      } else {
+        objectId = req.params.id;
+      }
+    })(); 
+    console.log('Received object ID:', typeof(objectId));
+    const data = await Entry.findById(objectId);
+    res.json(data);
+    // console.log("requested id is ", res,data);
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 const getEntryCount = async (req, res) => {
   try {
@@ -115,6 +134,7 @@ const deleteEntry = async (req, res) => {
 };
     module.exports = {
     getEntries,
+    getSingleObject,
     getEntryCount,
     createEntry,
     deleteEntry,

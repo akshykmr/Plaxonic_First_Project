@@ -8,26 +8,28 @@ import InputForm from './component/inputpage/Input_form1';
 import LisViewOutput from './component/outputpage/ListViewOutput1';
 import OutputPage from './component/outputpage/GridViewOutput';
 import DataContext from './component/Context/context';
+import SingleView from './component/outputpage/singleViewPage/SingleView'
 
 
 
 function App() {
 
-  const [inputImportedData, setInputImportedData] = React.useState(null);
+  const [inputData, setInputData] = React.useState(null);
 
   const getInputData =(result)=>{
-    setInputImportedData(result);
+    setInputData(result);
   }
 
 
   return (
-    <DataContext.Provider value ={{inputImportedData, getInputData,setInputImportedData}}>
+    <DataContext.Provider value ={{inputData, getInputData,setInputData}}>
     <BrowserRouter>
        <Header/>
        <Routes>
        <Route path="/" element={<InputForm/>} />
        <Route path ='/OutputPage' element ={<OutputPage/> }/>
        <Route path ='/ListView' element ={<LisViewOutput/> }/>
+       <Route path ='/SingleView' element ={<SingleView/> }/>
        </Routes>
     </BrowserRouter>
     </DataContext.Provider>

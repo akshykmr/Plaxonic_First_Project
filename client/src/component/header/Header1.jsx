@@ -10,7 +10,7 @@ import {BsGrid} from 'react-icons/bs'
 
 // import {DiGithub} from 'react-icons/di';
 // import {TiSocialTwitterCircular} from 'react-icons/ti';
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 
 
@@ -23,9 +23,14 @@ const Header = () => {
 //   navigate('/InputScreen');
 // }
 
-  const [activePage, setActivePage] = useState(1);
+//   const [activePage, setActivePage] = useState(0);
+const [activePage, setActivePage] = useState(() => localStorage.getItem("activePage") || 1);
 //   const [mode, setMode] = useState("Dark");
   const [activeNav, setActiveNav] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("activePage", activePage);
+  }, [activePage]);
 
 //   const handleLIghtMode = ()=>{
 //     setMode("Light");
@@ -36,17 +41,17 @@ const Header = () => {
 
   const handleNavigateToInputForm = ()=> {
     navigate(`/`);
-    setActivePage(1);
+    setActivePage("1");
 };
 
  const handleNavigateToListView = () =>{
     navigate(`/ListView`);
-    setActivePage(2);
+    setActivePage("2");
  };
 
  const handleNavigateToGridView = () =>{
     navigate(`/OutputPage`);
-    setActivePage(3);
+    setActivePage("3");
  };
 
  const openNavBar = () =>{
@@ -70,23 +75,23 @@ const Header = () => {
 
 
 
-                        <li className={activePage === 1 ? "hightedList hidden md:flex  flex-col text-white active:text-green-400 group " :  "normalList hidden md:flex flex-col group hover:text-white active:text-green-400"} onClick={handleNavigateToInputForm}>
+                        <li className={activePage === "1" ? "hightedList hidden md:flex  flex-col text-white active:text-green-400 group " :  "normalList hidden md:flex flex-col group hover:text-white active:text-green-400"} onClick={handleNavigateToInputForm}>
                             Input Form
-                        <span className={activePage === 1 ? " hidden md:inline-block content-none  h-[0.5px] mt-1 bg-orange-300 w-auto" : " hidden  md:inline-block  content-none h-[0.5px]  mt-1 bg-orange-300 w-0 transition-width duration-500 ease-in-out group-hover:w-full hover:opacity-100"}></span></li>
+                        <span className={activePage === "1" ? " hidden md:inline-block content-none  h-[0.5px] mt-1 bg-orange-300 w-auto" : " hidden  md:inline-block  content-none h-[0.5px]  mt-1 bg-orange-300 w-0 transition-width duration-500 ease-in-out group-hover:w-full hover:opacity-100"}></span></li>
                         
                         <li className={activeNav === true ? "hightedList  text-lg md:hidden justify-center items-center flex animate-slide-in active:text-white active:bg-green-700 hover:bg-gray-700 hover:text-white rounded-full w-7 h-7  " : " md:hidden animate-slide-out" } onClick={handleNavigateToInputForm}><MdOutlineHome/></li>
 
 
 
-                        <li className={activePage === 2 ? "hightedList hidden md:flex  flex-col text-white active:text-green-400 group " :  "normalList hidden md:flex flex-col group hover:text-white active:text-green-400"}onClick={handleNavigateToListView}>
+                        <li className={activePage === "2" ? "hightedList hidden md:flex  flex-col text-white active:text-green-400 group " :  "normalList hidden md:flex flex-col group hover:text-white active:text-green-400"}onClick={handleNavigateToListView}>
                             List View
-                        <span className={activePage === 2 ? " hidden md:inline-block content-none  text-green-600 h-[0.5px] mt-1 bg-orange-300 w-auto hover:bg-red-900" : " hidden  md:inline-block  content-none h-[0.5px]  mt-1 bg-orange-300 w-0 transition-width duration-500 ease-in-out group-hover:w-full hover:opacity-100"} ></span></li>
+                        <span className={activePage === "2" ? " hidden md:inline-block content-none  text-green-600 h-[0.5px] mt-1 bg-orange-300 w-auto hover:bg-red-900" : " hidden  md:inline-block  content-none h-[0.5px]  mt-1 bg-orange-300 w-0 transition-width duration-500 ease-in-out group-hover:w-full hover:opacity-100"} ></span></li>
 
                         <li className= {activeNav === true ? "hightedList  text-md md:hidden justify-center items-center flex animate-slide-in  active:text-white active:bg-green-700 hover:bg-gray-700 hover:text-white rounded-full w-7 h-7  " : "md:hidden animate-slide-out" } onClick={handleNavigateToListView}><HiOutlineClipboardList/><span></span></li>
 
-                        <li className={activePage === 3 ? "hightedList hidden md:flex  flex-col text-white active:text-green-400 group " :  "normalList hidden md:flex flex-col group hover:text-white active:text-green-400"}onClick={handleNavigateToGridView}>
+                        <li className={activePage === "3" ? "hightedList hidden md:flex  flex-col text-white active:text-green-400 group " :  "normalList hidden md:flex flex-col group hover:text-white active:text-green-400"}onClick={handleNavigateToGridView}>
                             Grid View
-                        <span className={activePage === 3 ? "hidden md:inline-block content-none  text-green-600 h-[0.5px] mt-1 bg-orange-300 w-auto hover:bg-red-900" : " hidden  md:inline-block  content-none h-[0.5px]  mt-1 bg-orange-300 w-0 transition-width duration-500 ease-in-out group-hover:w-full hover:opacity-100"} ></span></li>
+                        <span className={activePage === "3" ? "hidden md:inline-block content-none  text-green-600 h-[0.5px] mt-1 bg-orange-300 w-auto hover:bg-red-900" : " hidden  md:inline-block  content-none h-[0.5px]  mt-1 bg-orange-300 w-0 transition-width duration-500 ease-in-out group-hover:w-full hover:opacity-100"} ></span></li>
 
                         <li className={activeNav === true ? "hightedList  text-sm md:hidden justify-center items-center flex animate-slide-in active:text-white active:bg-green-700 hover:bg-gray-700 hover:text-white rounded-full w-7 h-7 " : "md:hidden animate-slide-out"} onClick={handleNavigateToGridView}><BsGrid/><span></span></li>
                     </ul>

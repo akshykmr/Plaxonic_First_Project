@@ -4,6 +4,7 @@ const entriesController = require('../controller/entriesController');
 
 // GET API
 router.get('/entries', entriesController.getEntries);
+router.get('/entries/:id', entriesController.getSingleObject);
 
 router.get('/entries/count', entriesController.getEntryCount);
 

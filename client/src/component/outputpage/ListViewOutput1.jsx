@@ -4,6 +4,9 @@ import './ListViewOutput.scss';
 import {TiDeleteOutline} from 'react-icons/ti';
 import axios from 'axios';
 import {IoIosRefreshCircle} from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+import DataContext from '../Context/context';
+
 
 
 
@@ -13,6 +16,9 @@ import {IoIosRefreshCircle} from 'react-icons/io';
 
 const ListViewOutput = () => {
 
+  const navigate = useNavigate();
+  const {getInputData} = React.useContext(DataContext);
+
 
     const[outputData, setOutputData] = useState();
     const[dataForFilter, setDataforFilter] = useState();
@@ -20,10 +26,17 @@ const ListViewOutput = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [clickAction, setClickAction] = useState(false);
 
+    const handleOpenItem = (index) => {
+      navigate(`/SingleView`)
+      // console.log("index of clicked item ", index,outputData[index]);
+      getInputData(outputData[index]._id);
+    }
+
 
 
     ///// FETCHING DATA FROM BACKEND 
     const fetchData = async () => {
+
       try {
         const response = await axios.get('http://localhost:5000/entries');
         const receivedData = response.data;
@@ -263,7 +276,6 @@ const ListViewOutput = () => {
                       <option value="2024">2024</option>
                       <option value="2025">2025</option>
                     </select>
-
                      </div>
                 </div>
                 <div  className="col-md-2 pt-1">
@@ -324,18 +336,18 @@ const ListViewOutput = () => {
                            onClick={() => handleCheckboxClick(index)}  />
                         </div>
                     </li>
-                    <li>{index+1}</li>
+                    <li onClick={()=>handleOpenItem(index)} >{index+1}</li>
                     <li>
-                        <span>
+                        <span onClick={()=>handleOpenItem(index)} >
                             <img src={outputData.Car_Image[0].imgUrl} alt="" />
                         </span>
                     </li>
-                    <li>{outputData.Car_Name}</li>
-                    <li>{outputData.Car_Modal}</li>
-                    <li>{outputData.Purchase_Year}</li>
-                    <li>{outputData.Transmission}</li>
-                    <li>{outputData.Fuel_Type}</li>
-                    <li type='button' onClick={() => handleRemoveSingleItem(index)}><TiDeleteOutline/></li>
+                    <li onClick={()=>handleOpenItem(index)} >{outputData.Car_Name}</li>
+                    <li onClick={()=>handleOpenItem(index)} >{outputData.Car_Modal}</li>
+                    <li onClick={()=>handleOpenItem(index)} >{outputData.Purchase_Year}</li>
+                    <li onClick={()=>handleOpenItem(index)} >{outputData.Transmission}</li>
+                    <li onClick={()=>handleOpenItem(index)} >{outputData.Fuel_Type}</li>
+                    <li  type='button' onClick={() => handleRemoveSingleItem(index)}><TiDeleteOutline/></li>
                 </ul>
             </div>
                 </li>
