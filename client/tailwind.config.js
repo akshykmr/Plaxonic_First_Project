@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       width: {
-        '98%': '98%',    
+        '98%': '98%',
+        '150%': '150%',        
         '60%': '60%',
         '50%' : '50%',
         '100%' : '100%',
@@ -219,7 +220,8 @@ module.exports = {
       fontSize: {
       xs: '0.75rem',
       xss: '10px',     // Extra small text size
-      sm: '0.875rem',    // Small text size
+      xsss: '8px',
+      sm: '12px',    // Small text size
       base: '1rem',      // Default text size
       lg: '1.125rem',    // Large text size
       xl: '1.25rem',     // Extra large text size

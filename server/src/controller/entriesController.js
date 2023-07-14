@@ -57,7 +57,6 @@ const createEntry = async (req, res) => {
   try {
     const imageFiles = req.files.Car_Image;
     const imageFilesUrl = [];
-    
     if (Array.isArray(imageFiles)) {
       for (let i = 0; i < imageFiles.length; i++) {
         const image = imageFiles[i];
@@ -76,12 +75,7 @@ const createEntry = async (req, res) => {
       });
       // console.log("single img url", result);
     }
-    
-
-    
     console.log("This is image data", imageFilesUrl);
-    
-    
     const entry = new Entry({
       Car_Name: req.body.Car_Name,
       Car_Modal: req.body.Car_Modal,
@@ -90,7 +84,6 @@ const createEntry = async (req, res) => {
       Fuel_Type: req.body.Fuel_Type,
       Car_Image: imageFilesUrl,
     });
-    
     entry.save()
       .then((newEntry) => {
         // console.log("New Entry Created", newEntry);
@@ -132,10 +125,34 @@ const deleteEntry = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+/// UPDATION API 
+
+const updatedObject = async (req, res) => {
+  try {
+    let objectId;
+    (() => {
+      if (typeof req.params.id === 'string') {
+        objectId = req.params.id.replace(/"/g, '')  ;
+      } else {
+        objectId = req.params.id;
+      }
+    })(); 
+    console.log('Received object ID:', typeof(objectId));
+    const data = await Entry.findById(objectId);
+    res.json(data);
+    // console.log("requested id is ", res,data);
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
     module.exports = {
     getEntries,
     getSingleObject,
     getEntryCount,
     createEntry,
     deleteEntry,
+    updatedObject,
     };
