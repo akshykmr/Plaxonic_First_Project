@@ -31,7 +31,7 @@ const getSingleObject = async (req, res) => {
         objectId = req.params.id;
       }
     })(); 
-    console.log('Received object ID:', typeof(objectId));
+    // console.log('Received object ID:', typeof(objectId));
     const data = await Entry.findById(objectId);
     res.json(data);
     // console.log("requested id is ", res,data);
@@ -138,10 +138,17 @@ const updatedObject = async (req, res) => {
         objectId = req.params.id;
       }
     })(); 
-    console.log('Received object ID:', typeof(objectId));
+    objectData = req.body;
+    console.log('Received object ID:', typeof(objectId),objectId, objectData );
     const data = await Entry.findById(objectId);
+    data.Car_Name = objectData.Car_Name;
+    data.Car_Modal = objectData.Car_Modal;
+    data.Purchase_Year = objectData.Purchase_Year;
+    data.Transmission = objectData.Transmission;
+    data.Fuel_Type = objectData.Fuel_Type;
+    await data.save()
     res.json(data);
-    // console.log("requested id is ", res,data);
+    console.log("requested id is ",data.Car_Name);
   } catch (error) {
     console.log('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });

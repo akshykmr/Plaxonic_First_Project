@@ -76,9 +76,7 @@ const SingleView = () => {
     }
   }, [inputData]);
 
-  const handleImageShow = () => {
-    setImageRecieved(true);
-  };
+  
 
   const handleImageHide = () => {
     setImageRecieved(false);
@@ -112,6 +110,7 @@ const SingleView = () => {
  
 
   const handleSaveData = async ()=>{
+    setEditingPanel(false);
     try {
       
       const updatedFormData = new FormData();
@@ -126,12 +125,11 @@ const SingleView = () => {
       if (!response.ok) {
         throw new Error('Request failed');
       }
-      const result = await response.json();
+      const result = await response.data;
       console.log(' this is submited Response:', result);
     } catch (error) {
       console.error('Error:', error);
     }
-    setEditingPanel(false);
   } 
 
 
@@ -148,6 +146,15 @@ const SingleView = () => {
   const handleEnableEditing = () => {
     setEditingPanel(true)
   }
+
+  const handleImageUpload = (event, index) => {
+    const file = event.target.files[index-index];
+    // setImageArray((prevData) => ({
+    //   ...prevData,
+    //   Car_Image: file,
+    // }))
+    console.log(file);
+  };
 
 
   const placeholders = {
@@ -216,8 +223,9 @@ const SingleView = () => {
         </span>
       </>
     ) : (
-      <span className="w-full h-full md:text-5xl text-xl text-gray-500 justify-center flex items-center rounded-md">
-        <span className="cursor-pointer active:text-white" onClick={handleImageShow}>
+      <span className="w-full h-full md:text-5xl text-xl text-gray-500 justify-center flex group items-center rounded-md ">
+        <input onChange={(event) => handleImageUpload(event, index)} className='md:text-xs md:border h-full absolute w-full  text-xl text-gray-500 justify-center flex items-center rounded-md opacity-0 cursor-pointer' type="file" accept="image/*" multiple required name="Car_Image" />
+        <span className="cursor-pointer  group-active:text-white">
           <AiFillFolderAdd />
         </span>
       </span>
