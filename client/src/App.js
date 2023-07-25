@@ -19,6 +19,7 @@ function App() {
   const getInputData =(result)=>{
     setInputData(result);
   }
+  
 
 
   return (

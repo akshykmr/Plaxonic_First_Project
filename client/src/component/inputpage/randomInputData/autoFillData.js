@@ -4,8 +4,8 @@
       "Car_Modal": "V4",
       "Purchase_Year": "2022",
       "Transmission": "Auto",
-      "Fuel_Type": "Petrol",
-      "Car_Image": ""
+      "Fuel_Type": "Petro l",
+      "Car_Image": []
     },
     {
       "Car_Name": "Honda",
@@ -13,7 +13,7 @@
       "Purchase_Year": "2022",
       "Transmission": "Manual",
       "Fuel_Type": "Gasoline",
-      "Car_Image": ""
+      "Car_Image": []       
     },
     {
       "Car_Name": "Ford",
@@ -21,7 +21,7 @@
       "Purchase_Year": "2022",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Chevrolet",
@@ -29,7 +29,7 @@
       "Purchase_Year": "2022",
       "Transmission": "Manual",
       "Fuel_Type": "Gasoline",
-      "Car_Image": ""
+      "Car_Image": []       
     },
     {
       "Car_Name": "Tesla",
@@ -37,7 +37,7 @@
       "Purchase_Year": "2022",
       "Transmission": "Auto",
       "Fuel_Type": "Electric",
-      "Car_Image": ""
+      "Car_Image": []       
     },
     {
       "Car_Name": "BMW",
@@ -45,7 +45,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Mercedes-Benz",
@@ -53,7 +53,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Audi",
@@ -61,7 +61,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Lamborghini",
@@ -69,7 +69,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Ferrari",
@@ -77,7 +77,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Porsche",
@@ -85,7 +85,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Volkswagen",
@@ -93,7 +93,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
       "Car_Name": "Volvo",
@@ -101,7 +101,7 @@
       "Purchase_Year": "2023",
       "Transmission": "Auto",
       "Fuel_Type": "Petrol",
-      "Car_Image": ""
+        "Car_Image": []     
     },
     {
         "Car_Name": "Mazda",
@@ -109,7 +109,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Auto",
         "Fuel_Type": "Petrol",
-        "Car_Image": ""
+        "Car_Image": []       
       },
       {
         "Car_Name": "Subaru",
@@ -117,7 +117,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Manual",
         "Fuel_Type": "Gasoline",
-        "Car_Image": ""
+      "Car_Image": []         
       },
       {
         "Car_Name": "Nissan",
@@ -125,7 +125,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Auto",
         "Fuel_Type": "Petrol",
-        "Car_Image": ""
+        "Car_Image": []       
       },
       {
         "Car_Name": "Kia",
@@ -133,7 +133,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Auto",
         "Fuel_Type": "Petrol",
-        "Car_Image": ""
+        "Car_Image": []       
       },
       {
         "Car_Name": "Hyundai",
@@ -141,7 +141,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Auto",
         "Fuel_Type": "Petrol",
-        "Car_Image": ""
+        "Car_Image": []       
       },
       {
         "Car_Name": "Jeep",
@@ -149,7 +149,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Manual",
         "Fuel_Type": "Gasoline",
-        "Car_Image": ""
+      "Car_Image": []         
       },
       {
         "Car_Name": "Land Rover",
@@ -157,7 +157,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Auto",
         "Fuel_Type": "Petrol",
-        "Car_Image": ""
+        "Car_Image": []       
       },
       {
         "Car_Name": "Lexus",
@@ -165,7 +165,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Auto",
         "Fuel_Type": "Petrol",
-        "Car_Image": ""
+        "Car_Image": []       
       },
       {
         "Car_Name": "Mitsubishi",
@@ -173,7 +173,7 @@
         "Purchase_Year": "2023",
         "Transmission": "Auto",
         "Fuel_Type": "Petrol",
-        "Car_Image": ""
+        "Car_Image": []       
       }
     ]
     

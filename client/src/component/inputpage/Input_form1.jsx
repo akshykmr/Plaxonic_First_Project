@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './Input_form.scss';
 // import Compressor from 'compressorjs';
 import randomAutoFillData from './randomInputData/autoFillData';
-import axios from 'axios';
+// import axios from 'axios';
  
 const InputSection = ({ index, handleOnChange, titles, placeholders, formData }) => {
 
@@ -114,22 +114,22 @@ const Input_form = () => {
             Car_Image: files,
           }));
         };
-        // console.log("final formdata",formData.Car_Image);
+        console.log("final formdata",formData.Car_Image);
 
 
     
-      useEffect(() => {
-        const fetchResponseCount = async () => {
-          try {
-            const response = await axios.get(dbURL+'/count');
-            setResponseCount(response.data.count);
-          } catch (error) {
-            console.error('Error fetching response count:', error);
-          }
-        };
+      // useEffect(() => {
+      //   const fetchResponseCount = async () => {
+      //     try {
+      //       const response = await axios.get(dbURL+'/count');
+      //       setResponseCount(response.data.count);
+      //     } catch (error) {
+      //       console.error('Error fetching response count:', error);
+      //     }
+      //   };
     
-        fetchResponseCount();
-      }, []);
+      //   fetchResponseCount();
+      // }, []);
       
       const SubmitValidation = async (e) => {
           e.preventDefault(); 
