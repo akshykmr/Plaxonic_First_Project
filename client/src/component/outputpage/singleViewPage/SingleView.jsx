@@ -354,8 +354,9 @@ const SingleView = (propValue) => {
     console.log(publicId, "This is image id for selection");
     console.log(editableData.Car_Image, "This is image id for selection");
   };
-
+  
   const handleImageUploadingMode = (isSingle, isMultiple) => {
+    
     if (isSingle) {
       setImageUploadingMode("Multiple");
     } else if (isMultiple) {
