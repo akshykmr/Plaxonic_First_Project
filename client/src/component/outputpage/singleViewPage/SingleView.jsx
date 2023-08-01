@@ -9,6 +9,8 @@ import axios from "axios";
 import { RiSaveLine } from "react-icons/ri";
 import { MdOutlineCancel } from "react-icons/md";
 
+
+
 const InputSection = ({
   index,
   handleOnChange,
@@ -65,13 +67,16 @@ const SingleView = (propValue) => {
   const dbURL = "http://localhost:5000/entries";
 
   const { inputData } = React.useContext(DataContext);
-  const [isiImageUploaded, setIsImageUploaded] = React.useState([
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  ]);
-  const [isiImageSelected, setIsImageSelected] = useState(false);
-  const [productId] = useState(() => localStorage.getItem("productId"));
-  const [url, setUrl] = useState();
+  /// OBJECT ID PASSED BY LIST/GRID VIEW COMPONENT
+
+  const [objectIdInLocalStorage] = useState(() =>
+    localStorage.getItem("objectIdInLocalStorage")
+  ); /// CREATING LOCAL STORAGE TO STORE OBJECT ID
+
+  const [finalObjectId, setFinalObjectId] = useState(); ///  OBJECT ID (INITIALLY IS INPUTDATA BUT WILL BE FETCH FROM LOCAL STORAGE AFTER RELOAD/REFRESH)
+
   const [editableData, setEditableData] = useState({
+    /// OBJECT TO STORE THE RESPONSE/FORM DATA FETCHED BY API
     Car_Name: "",
     Car_Modal: "",
     Purchase_Year: "",
@@ -80,30 +85,61 @@ const SingleView = (propValue) => {
     Total_Images: "",
     Car_Image: [],
   });
-  const [editingPanel, setEditingPanel] = useState(false);
-  const [imageAction, setImageAction] = useState(0);
-  const [imgUploadingMode, setImageUploadingMode] = useState("Single");
-  const [localImageUrl, setLocalImageUrl] = useState([]);
-  const [imageForMultimodeUpload, setImageForMultimodeUpload] = useState([]);
+
+  const [isIImageLoadedAtIndex, setIsImageLoadedAtIndex] = React.useState(
+    Array.from({ length: 12 }, () => false)
+  );
+  /// HANDLING IMG UPLOADING STATUS AT EVERY INDEX AND HANDLING DELETE AND REMOVE ICON/OPTION ON INDIVISUAL IMAGE
+
+  const [actionOnImage, setActionOnImage] = useState(null); /// HANDLING DELETE OR Discard OPERATIONS OF IMAGE
+
+  const [isiImageSelected, setIsImageSelected] = useState(false); /// HANDLING UPDATE BUTTON  DISPLAY FUNCTIONALITY FOR IMG SECTION
+
+  const [editingPanel, setEditingPanel] = useState(false); /// THIS ALLOWS USER TO EDIT RESPONSE IN FORM - TRIGGERS WITH EDIT BUTTON
+
+  const [imgUploadingMode, setImageUploadingMode] = useState("Single"); /// HANDLES THE IMAGE UPLOADING MODES
+
+  const [localImageUrlForMultipleMode, setLocalImageUrlForMultipleMode] =
+    useState([]); /// STORING IMG-URL ONLY FROM MULTIPLE MODE AFTER IMG-SELECTION AND PERFORMING FILE-READING FUNCTIONALITY ON EVERY IMAGE
+
+  const [imageForMultimodeUpload, setImageForMultimodeUpload] = useState([]); /// STORING ACTUAL IMAGE FILES(BINARY-FORMAT) TAKEN FROM MULTIPLE MODE WILL BE SENT TO SERVER TO UPDATE IN DB
+
   const [isImageUploadedFromMultiple, setIsImageUploadedFromMultiple] =
-    useState(false);
+    useState(false); /// HANDLES THE UPDATE/CANCEL BUTTON APPEARANCE ON MULTIPLE MODE
+
+    const [effectWatcher, setEffectWatcher] = useState(false)
+
+    // const [effectWatcher, setEffectWatcher] = useState()
+
+  const placeholders = {
+    0: "Enter Your car Name",
+    1: "Enter Your car Model",
+    2: "Enter the Purchase date",
+    3: "Enter the Transmission Type",
+    4: "Enter Fuel Type",
+  };
+
+  /////////////////////// UPDATING OBJECT ID  ///////////////////////////
 
   useEffect(() => {
     if (inputData) {
-      setUrl(inputData);
-      localStorage.setItem("productId", inputData);
+      setFinalObjectId(inputData); /// INITIALLY OBJECTID IS SET AS INPUTDATA(PASSED BY LIST/GRID VIEW)
+      localStorage.setItem("objectIdInLocalStorage", inputData);
     } else {
-      setUrl(productId);
+      setFinalObjectId(objectIdInLocalStorage); /// FETCHED FROM LOCAL STORAGE AFTER RELOAD OR REFRESH
     }
-  }, [inputData, productId]);
+  }, [inputData, objectIdInLocalStorage]);
+
+  /////////////////////// FETCH/GET REQUEST ///////////////////////////
 
   useEffect(() => {
     const getData = async () => {
       try {
-        if (!url) {
+        if (!finalObjectId) {
+          /// GET REQ ONLY BE EXECUTED IF THERE IS ANY VALUE IN FINALOBJECTID
           return;
         }
-        const response = await axios.get(`${dbURL}/${url}`);
+        const response = await axios.get(`${dbURL}/${finalObjectId}`); /// SENDING FETCH REQUEST
         setEditableData({
           Car_Name: response.data.Car_Name,
           Car_Modal: response.data.Car_Modal,
@@ -119,28 +155,39 @@ const SingleView = (propValue) => {
     };
 
     getData();
-  }, [url]);
+  }, [finalObjectId,effectWatcher]);
 
-  useEffect(()=>{
-    if(imageForMultimodeUpload.length>0){
-      console.log("==",imageForMultimodeUpload);
+  useEffect(() => {
+    if (editableData.Car_Image.length > 0) {
+      console.log("array", editableData.Car_Image);
     }
-  },[imageForMultimodeUpload]);
-
+  }, [editableData]);
 
   // useEffect(() => {
-  //   if (localImageUrl.length > 0) 
-  //   console.log("img array", localImageUrl);
+  //   if (localImageUrlForMultipleMode.length > 0)
+  //   console.log("img array", localImageUrlForMultipleMode);
   //   setIsImageUploadedFromMultiple(true);
-  // }, [localImageUrl]); //// CHECKING MULTIPLE IMAGE ONLOAD AND STORE FUNCTION
+  // }, [localImageUrlForMultipleMode]); //// CHECKING MULTIPLE IMAGE ONLOAD AND STORE FUNCTION
 
-  const handleImageUpload = async (event, index, isMultiple) => {
-    if (isMultiple) {
+  /////////////////// EVENT LISTNER ON TEXT INPUT : LISTEN AND SET THE EDITED DATA IN FORMDATA (TEXT ONLY) ///////////////////
+  const handleOnChange = (event) => {
+    const { name, value } = event.target;
+    setEditableData((prevalue) => ({ ...editableData, [name]: value }));
+  };
+
+  /////////////////////// EVEN LISTNER ON IMG INPUT  : IMAGE UPLOADING HANDLER ///////////////////////////
+
+  const handleImageUpload = async (event, index, isMultipleModeON) => {
+    if (isMultipleModeON) {
+      /// IF MODE IS SET TO MULTIPLE UPLOADING
 
       const files = event.target.files;
-
+      if (files.length > 6) {
+        alert("You can only choose up to 6 files.");
+        return;
+      }
       const imageDataURLs = [];
-      const imageDataFiles = []
+      const imageDataFiles = [];
       for (let i = 0; i < files.length && i < 6; i++) {
         const file = files[i];
         imageDataFiles.push(files[i]);
@@ -148,15 +195,17 @@ const SingleView = (propValue) => {
         reader.onload = () => {
           imageDataURLs.push(reader.result);
           if (imageDataURLs.length === Math.min(files.length, 6)) {
-            setLocalImageUrl(imageDataURLs);
+            setLocalImageUrlForMultipleMode(imageDataURLs);
           }
         };
         reader.readAsDataURL(file);
       }
-      console.log("=",imageDataFiles)
-      setImageForMultimodeUpload(imageDataFiles);        
-    setIsImageUploadedFromMultiple(true);
+      // console.log("=",imageDataFiles)
+      setImageForMultimodeUpload(imageDataFiles);
+      setIsImageUploadedFromMultiple(true);
     } else {
+      /// IF MODE IS SET TO SINGLE UPLOADING
+
       const file = event.target.files[0];
       try {
         const formData = new FormData();
@@ -167,7 +216,7 @@ const SingleView = (propValue) => {
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/dsk9g1uuo/image/upload`,
           {
-            method: "POST",
+            method: "PUT",
             body: formData,
           }
         );
@@ -182,41 +231,60 @@ const SingleView = (propValue) => {
         };
 
         setEditableData((prevData) => {
+          /// SETTING IMG URL AFTER IMG UPLOADS IN CLOUDINARY
           const updatedArray = [...prevData.Car_Image];
           updatedArray[index] = imagePacket;
           return { ...prevData, Car_Image: updatedArray };
         });
-        setIsImageUploaded((prevData) => {
+
+        setIsImageLoadedAtIndex((prevData) => {
+          /// SETTING IMG UPLOAD STATUS AS TRUE AT INDEX FOR EVERY IMAGE INDIVISUALLY THAT WILL HELP REMOVE BUTTON TO APPEAR AT SPECIFIC INDEX AND WILL APPLY SPECIAL CSS AT INDEX
           const updatedData = [...prevData];
-          updatedData[index] = 2;
+          updatedData[index] = true;
           return updatedData;
         });
-        console.log("Image URL:", result.url);
+        // console.log("Image URL:", result.url);
       } catch (error) {
         console.error("Error:", error);
       }
-      setIsImageSelected(true);
+      setIsImageSelected(true); /// THIS WILL HELP UPDATE BUTTON TO APPEAR
     }
   };
 
-  const handleSaveData = async (textformSubmit, singleModeImageSubmit, multipleModeImageSubmit ) => {
-    setEditingPanel(false);
+  /////////////////////////// HANDLES THE UPDATES/EDITED FIELDS IN FORM-DATA / IMAGE AND SEND THE REQUEST TO SERVER TO STORE IT IN DB ////////////////////////////////////////////
+
+  const handleSaveData = async (
+    textformSubmit,
+    singleModeImageSubmit,
+    multipleModeImageSubmit
+  ) => {
+    setEditingPanel(false); /// EDITING PANEL WILL CLOSE AFTER HITING SAVE-BUTTON
+
     if (textformSubmit) {
+      /// THIS WILL SAVE EDITED TEXT-DATA ONLY IN FORMDATA AND WILL SEND REQ / IMAGE-DATA EXCLUDED
       try {
-        const updatedFormData = new FormData();
-        updatedFormData.append("Car_Name", editableData.Car_Name);
-        updatedFormData.append("Car_Modal", editableData.Car_Modal);
-        updatedFormData.append("Purchase_Year", editableData.Purchase_Year);
-        updatedFormData.append("Transmission", editableData.Transmission);
-        updatedFormData.append("Fuel_Type", editableData.Fuel_Type);
+        const formData = new FormData();
+        formData.append("Car_Name", editableData.Car_Name);
+        formData.append("Car_Modal", editableData.Car_Modal);
+        formData.append("Purchase_Year", editableData.Purchase_Year);
+        formData.append("Transmission", editableData.Transmission);
+        formData.append("Fuel_Type", editableData.Fuel_Type);
 
-        const response = await axios.put(`${dbURL}/${url}`, updatedFormData);
-
-        console.log(updatedFormData, "this is formdata");
+        const response = await axios.put(
+          `${dbURL}/${finalObjectId}`,
+          formData,
+          {
+            headers: { action: "textformData" },
+          }
+        );
 
         if (response.status === 200) {
           const result = await response.data;
-          console.log(" this is submitted Response:", result);
+          console.log(
+            response.status,
+            " MESSAGE : Text-data has been updated succesfully"
+          );
+          console.log(" RESPONSE:", result);
         } else {
           throw new Error("Request failed");
         }
@@ -224,63 +292,153 @@ const SingleView = (propValue) => {
         console.error("Error:", error);
       }
     } else if (singleModeImageSubmit) {
-      setIsImageSelected(false);
-      setIsImageUploaded(2);
+      /// FOR SINGLE MODE : THIS WILL SEND REQ CONTAINING IMAGE DATA (ALL URLS FOR NEW IMAGES HAVE BEEN ALREADY GENERATED WITH CLOUDINARY API(FRONTEND SIDE) AND STORED IN EDITABLEDATA.CAR_IMAGE OBJECT  )
+
+      setIsImageSelected(false); /// WILL HIDE THE UPDATE BUTTON AFTER SUBMISSION IMAGE DATA
+
+      setIsImageLoadedAtIndex(
+        Array.from(Array.from({ length: 12 }, () => false))
+      ); /// WILL HIDE "REMOVE" ICON AND CSS AND WILL HELP TO APPEAR DELETE ICON FOR ALL IMAGES  AS ALL VALUES WILL BECOME FALSE WITH THIS
       try {
-        const response = await axios.put(`${dbURL}/${url}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editableData.Car_Image),
-        });
+        const carImages = editableData.Car_Image;
+        const response = await axios.put(
+          `${dbURL}/${finalObjectId}`,
+          { carImages },
+          {
+            headers: { action: "singleModeImageData" },
+          }
+        );
 
         if (response.status === 200) {
           const result = await response.data;
-          console.log("this is submitted Response:", result);
+          console.log(
+            response.status,
+            " MESSAGE : Image Data has been updated succesfully"
+          );
+          console.log(" RESPONSE:", result);
         } else {
           throw new Error("Request failed");
         }
       } catch (error) {
         console.error("Error:", error);
       }
+    } else if (multipleModeImageSubmit) {
+      /// FOR MULTIPLE MODE
+      setIsImageUploadedFromMultiple(false);
+      try {
+        const formData = new FormData();
+        for (const file of imageForMultimodeUpload) {
+          //
+          formData.append("Car_Image", file);
+        }
+        // console.log(formData, "this is formdata");
+        const response = await axios.put(
+          `${dbURL}/${finalObjectId}`,
+          formData,
+          {
+            headers: { action: "multipleModeImageData" },
+          }
+        );
+        if (response.status === 200) {
+          const result = response.data;
+          console.log(
+            response.status,
+            " MESSAGE : Image Data has been updated succesfully"
+          );
+          setEffectWatcher(true);
+          setTimeout(() => {
+          setEffectWatcher(false);
+          }, 1000);
+          console.log(" RESPONSE:", result);
+        } else {
+          throw new Error("FAILURE : REQUEST FAILED");
+        }
+      } catch (error) {
+        console.error("Error :", error);
+      }
     }
-    else if(multipleModeImageSubmit){
-      console.log(multipleModeImageSubmit);
-    }
   };
 
-  const handleClosePanel = () => {
-    setEditingPanel(false);
-  };
-
-  const handleOnChange = (event) => {
-    const { name, value } = event.target;
-    setEditableData((prevalue) => ({ ...editableData, [name]: value }));
-  };
-
+  /////////////////// OPEN THE EDITING PANEL WHEN EDIT BUTTON IS CLICKED (FOR TEXT FIELD ONLY) ///////////////////
   const handleEnableEditing = () => {
     setEditingPanel(true);
   };
 
-  const placeholders = {
-    0: "Enter Your car Name",
-    1: "Enter Your car Model",
-    2: "Enter the Purchase date",
-    3: "Enter the Transmission Type",
-    4: "Enter Fuel Type",
+  /////////////////// CLOSE THE EDITING PANEL WHEN CLOSE BUTTON IS CLICKED (FOR TEXT FIELD ONLY) ///////////////////
+  const handleDesableEditing = () => {
+    setEditingPanel(false);
   };
+
+  //////////////////////// HANDLER : HANDLING UPDATE BUTTON APPERANCE ACCORDING DISCARD FUNCTION AND IMAGE STATUS IN EDITABLE STATE  //////////////////////////////////
+  useEffect(() => {
+    if (isIImageLoadedAtIndex) {
+      // console.log("state of img", isIImageLoadedAtIndex);
+      const allZero = isIImageLoadedAtIndex.every((value) => value === false); /// CHECKING IF ALL VALUE ARE FALSE MEANS NO IMAGE IS SELECTED OR ALL SELECTED IMAGES ARE DiscardED/REMOVED
+      if (allZero) {
+        setIsImageSelected(false);
+        // console.log(isiImageSelected);
+      } else {
+        setIsImageSelected(true);
+      }
+    }
+    // console.log("isIImageLoadedAtIndex:", isIImageLoadedAtIndex);
+  }, [actionOnImage]);
+
+  ////////////////////////  DELETE / Discard OPERATION ON IMAGE //////////////////
+  const handleDiscardImageUpload = async (
+    index,
+    isDeleting,
+    isCancelUpload
+  ) => {
+    if (isDeleting) {
+      /// SETTING ACTION AS DELETE SO THAT BELOW DELETE FUNCTION WILL BE EXECUTED
+      setActionOnImage("Delete");
+    } else if (isCancelUpload) {
+      /// SETTING ACTION AS PUBLICID OF SELECTED IMG WHICH IS ALREADY UPLOADED ON CLOUDINARY TO PERFORM DELETE/Discard OPERATION ON SPECIFIC IMG OR TO DELETE THE IMG FROM CLOUDINARY : OR PASSING PUBLIC ID AS PROPS TO DELETE FUNCTION
+      setActionOnImage(editableData.Car_Image[index].imgPublic_Id);
+      setIsImageLoadedAtIndex((prevData) => {
+        /// THIS WILL UPDATE THE IMG STATUS AS FALSE AS SOON AS IMG WILL BE DELETED OR Discard AT SPECIFIC INDEX
+        const updatedData = [...prevData];
+        updatedData[index] = false;
+        return updatedData;
+      });
+    }
+    setEditableData((prevData) => {
+      /// REMOVING IMG URL(EXISTING URL FETCHED FROM MONGODB OR FETCHED AND STORED BY CLOUDINARY API WHILE UPLOADING NEW IMAGE ) FROM FORMDATA(EDITABLEDATA) SO THAT IMG WILL BE DISSAPEARED FROM SCREEN AND ALSO CAN BE UPDATED IN MONGODB
+      const updatedArray = [...prevData.Car_Image];
+      if (isDeleting) {
+        updatedArray[index].imgUrl = "result.url";
+      } else if (isCancelUpload) {
+        updatedArray[index].imgUrl = "result.url";
+        updatedArray[index].imgPublic_Id = "result.public_id";
+      }
+      return { ...prevData, Car_Image: updatedArray };
+    });
+    console.log("array", editableData.Car_Image);
+  };
+
+  /////////////////////////// DELETE / Discard FUNCTION DEPENDENT ON handleDiscardImageUpload FUNCTION  /////////////////////////////////////
 
   useEffect(() => {
     const handleImageDelete = async () => {
+      /// DELETING IMG URL FROM DB
       try {
-        const response = await axios.put(`${dbURL}/${url}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editableData.Car_Image),
-        });
+        const carImages = editableData.Car_Image;
+        const response = await axios.put(
+          `${dbURL}/${finalObjectId}`,
+          { carImages },
+          {
+            headers: { action: "singleModeImageData", operation: "Delete" },
+          }
+        );
 
         if (response.status === 200) {
           const result = await response.data;
-          console.log("this is submitted Response:", result);
+          console.log(
+            response.status,
+            " MESSAGE : Image has been Deleted Successfully"
+          );
+          console.log(" RESPONSE:", result);
         } else {
           throw new Error("Request failed");
         }
@@ -290,10 +448,11 @@ const SingleView = (propValue) => {
     };
 
     const handleImageRemove = async (removeActionId) => {
-      console.log(removeActionId);
+      /// TAKED PUBLIC ID AS PROPS AND ONLY DELETE THE IMG FROM CLOUDINARY DB
+      // console.log(removeActionId);
       try {
         const response = await axios.delete(
-          `${dbURL}/${url}?public_id=${removeActionId}`
+          `${dbURL}/${finalObjectId}?public_id=${removeActionId}`
         );
         console.log(
           "Object deleted successfully:",
@@ -305,67 +464,31 @@ const SingleView = (propValue) => {
       }
     };
 
-    if (imageAction === "Delete") {
+    if (actionOnImage === "Delete" && actionOnImage !== null) {
+      /// WILL EXECUTE DELETE FUNCTION IF ACTION IS SET DELETE BY handleDiscardImageUpload FUNCTION
       handleImageDelete();
-      setImageAction(0);
-      console.log("this is for delete");
-    } else if (imageAction !== "Delete" && imageAction !== 0) {
-      handleImageRemove(imageAction);
-      setImageAction(0);
+      setActionOnImage(null);
+      // console.log("this is for delete");
+    } else if (actionOnImage !== "Delete" && actionOnImage !== null) {
+      /// WILL EXECUTE DELETE FUNimgCTION FOR CLOUDINARY DB ONLY IF ACTION IS SET AS PUBLIC ID BY handleDiscardImageUpload
+      handleImageRemove(actionOnImage);
+      setActionOnImage(null);
     }
-  }, [imageAction]);
+  }, [actionOnImage]);
 
-  useEffect(()=>{
-    if(isiImageUploaded){
-      console.log("state of img", isiImageUploaded);
-    const allZero = isiImageUploaded.every((value) => value === 0);
-  if (allZero) {
-    setIsImageSelected(false);
-    console.log(isiImageSelected);
-    } else{
-    setIsImageSelected(true);
-    }
-  }
-      console.log("isiImageUploaded:", isiImageUploaded);
+  const handleImageUploadingMode = (isSingle, isMultipleModeON) => {
+    /// HANDLING MODE
 
-  },[imageAction]);
-
-  const handleDescardImageUpload = async (
-    index,
-    isDeleting,
-    isCancelUpload
-  ) => {
-    if (isDeleting) {
-      setImageAction("Delete");
-    } else if (isCancelUpload) {
-      setImageAction(editableData.Car_Image[index].imgPublic_Id);
-      setIsImageUploaded((prevData) => {
-        const updatedData = [...prevData];
-        updatedData[index] = 0;
-        return updatedData;
-      });
-    }
-     const publicId = editableData.Car_Image[index].imgPublic_Id;
-    setEditableData((prevData) => {
-      const updatedArray = [...prevData.Car_Image];
-      updatedArray[index].imgUrl = "result.url"; // Make sure to use the correct value for imgUrl
-      return { ...prevData, Car_Image: updatedArray };
-    });
-    console.log(publicId, "This is image id for selection");
-    console.log(editableData.Car_Image, "This is image id for selection");
-  };
-  
-  const handleImageUploadingMode = (isSingle, isMultiple) => {
-    
     if (isSingle) {
       setImageUploadingMode("Multiple");
-    } else if (isMultiple) {
+    } else if (isMultipleModeON) {
       setImageUploadingMode("Single");
     }
   };
 
-  const handleClearMultipleImage = () => {
-    setLocalImageUrl([]);
+  const handleClearMultipleModeData = () => {
+    ///////// DISCARD FUNCTION FOR MULTIPLE MODE ON SELECTED IMAGES
+    setLocalImageUrlForMultipleMode([]);
     setImageForMultimodeUpload([0]);
     setIsImageUploadedFromMultiple(false);
   };
@@ -440,7 +563,7 @@ const SingleView = (propValue) => {
                     <span
                       className={
                         editingPanel
-                          ? "  absolute left-48 hidden  md:h-12 md:block bottom-48  w-16  "
+                          ? " texwhtie  absolute left-48 hidden  md:h-12 md:block bottom-48  w-16  "
                           : "hidden"
                       }
                       onClick={() => handleSaveData(true, false, false)}
@@ -458,7 +581,7 @@ const SingleView = (propValue) => {
                           ? " absolute left-80 hidden  md:h-12 md:block bottom-48  w-16  "
                           : "hidden "
                       }
-                      onClick={handleClosePanel}
+                      onClick={handleDesableEditing}
                     >
                       <button
                         type="button"
@@ -476,7 +599,7 @@ const SingleView = (propValue) => {
             <span className="  flex justify-center ml-auto mr-auto mt-2 w-80% rounded-lg h-6  align-middle items-center uppercase font-semibold bg-green-800 bg-opacity-30 drop-shadow-xl tracking-widest text-xs">
               Media Files
             </span>
-            <div className="modeSlider h-6  rounded-xl bg-slate-500 p-1 w-9% border relative flex ml-auto mr-auto">
+            <div className="modeSlider h-6  rounded-xl bg-slate-500 p-1 w-19% md:w-9% border relative flex ml-auto mr-auto">
               {imgUploadingMode === "Single" ? (
                 <span
                   className="singleMode border  border-black rounded-xl absolute cursor-pointer w-60% bg-white text-black h-4 text-xss active:bg-slate-500 font-semibold transition-left left-1 flex justify-center "
@@ -492,6 +615,10 @@ const SingleView = (propValue) => {
                   Multiple
                 </span>
               )}
+
+
+
+              
             </div>
 
             {imgUploadingMode === "Single" ? (
@@ -499,7 +626,11 @@ const SingleView = (propValue) => {
                 {[...Array(12)].map((_, index) => (
                   <span
                     key={index}
-                    className={ isiImageUploaded[index] === 2 ? "border-4 relative mt-1 border-green-400 border-solid rounded-md m-0 flex w-30% h-20% filter grayscale " : "border-1 relative mt-1 border-black border-dashed rounded-md m-0 flex w-30% h-20%" }
+                    className={
+                      isIImageLoadedAtIndex[index] === true
+                        ? "border-4 relative mt-1 border-green-400 border-solid rounded-md m-0 flex w-25% h-20% filter grayscale "
+                        : "border-1 relative mt-1 border-black border-dashed rounded-md m-0 flex w-25% h-20%"
+                    }
                   >
                     {index < editableData.Car_Image.length ? (
                       editableData.Car_Image[index].imgUrl !== "result.url" ? (
@@ -514,11 +645,11 @@ const SingleView = (propValue) => {
                             }
                             alt=""
                           />
-                          {isiImageUploaded[index] === 2 ? (
+                          {isIImageLoadedAtIndex[index] === true ? (
                             <span className="absolute w-3 h-3 md:w-5 md:h-5 md:text-lg text-xs text-white rounded-sm flex justify-center items-center right-1 top-1 hover:border-red-500 hover:bg-red-600 cursor-pointer hover:border-dashed active:bg-white">
                               <span
                                 onClick={() =>
-                                  handleDescardImageUpload(index, false, true)
+                                  handleDiscardImageUpload(index, false, true)
                                 }
                               >
                                 <MdOutlineCancel />
@@ -527,9 +658,9 @@ const SingleView = (propValue) => {
                           ) : (
                             <span
                               key={index}
-                              className="absolute w-3 h-3 md:w-5 md:h-5 md:text-lg text-xs text-white rounded-sm flex justify-center items-center right-1 top-1 hover:border-red-500 hover:bg-red-600 cursor-pointer hover:border-dashed active:bg-white"
+                              className="absolute w-3 border rounded-xl h-3 md:w-5 md:h-5 md:text-lg bg-red-200 text-xs text-white  flex justify-center items-center right-1 top-1 hover:border-red-500 hover:bg-red-600 cursor-pointer hover:border-dashed active:bg-white"
                               onClick={() =>
-                                handleDescardImageUpload(index, true, false)
+                                handleDiscardImageUpload(index, true, false)
                               }
                             >
                               <MdDelete />
@@ -560,33 +691,55 @@ const SingleView = (propValue) => {
                     )}
                   </span>
                 ))}
-                 {isiImageSelected ? (
-              <div className="img_updating_btn  flex items-center justify-center w-full ">
-                <button
-                  type="button"
-                  className="btn btn-outline-info h-8 p-1 text-xs text-black uppercase font-semibold"
-                  onClick={() => handleSaveData(false, true, false)}
-                >
-                  Update
-                </button>
-              </div>
-            ) : (
-              ""
-            )}
+                {isiImageSelected ? (
+                  <div className="img_updating_btn  flex items-center justify-center w-full ">
+                    <button
+                      type="button"
+                      className="btn btn-outline-info h-8 p-1 text-xs text-black uppercase font-semibold"
+                      onClick={() => handleSaveData(false, true, false)}
+                    >
+                      Update
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
               </section>
-              
             ) : (
               <section className=" p-2  flex md:mt-1 gap-2 justify-center flex-wrap  ml-auto  mr-auto  w-98%  h-85%   ">
                 {[...Array(7)].map((_, index) => (
                   <span
                     key={index}
-                    className={isImageUploadedFromMultiple ? "border-4 relative mt-1 border-white border-solid rounded-md m-0 flex w-30% h-20% filter grayscale " : "border-1 relative mt-1 border-black border-dashed rounded-md m-0 flex w-30% h-20%"}
+                    className={
+                      isImageUploadedFromMultiple
+                        ? "border-4 relative mt-1 border-white border-solid rounded-md m-0 flex w-25% h-20% filter grayscale "
+                        : "border-1 relative mt-1 border-black border-dashed rounded-md m-0 flex w-25% h-20%"
+                    }
                   >
-                    {index < localImageUrl.length ? (
-                      // Display the image from localImageUrl array if available
+                    {index === 6 ? (
+                      // Display the upload button at the 7th position
+                      <span className="w-full h-full md:text-5xl text-xl text-gray-500 justify-center flex group items-center rounded-md">
+                        <input
+                          onChange={(event) =>
+                            handleImageUpload(event, null, true)
+                          }
+                          className="md:text-xs md:border h-full absolute w-full text-xl text-gray-500 justify-center flex items-center rounded-md opacity-0 cursor-pointer"
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          required
+                          name="Car_Image"
+                        />
+                        <span className="cursor-pointer group-active:text-white">
+                          <AiFillFolderAdd />
+                        </span>
+                        <span className="text-lg"> Upload</span>
+                      </span>
+                    ) : // Display the image from localImageUrlForMultipleMode array if available
+                    index < localImageUrlForMultipleMode.length ? (
                       <img
                         className="w-full h-full rounded-md"
-                        src={localImageUrl[index]}
+                        src={localImageUrlForMultipleMode[index]}
                         alt=""
                       />
                     ) : index < editableData.Car_Image.length ? (
@@ -597,58 +750,41 @@ const SingleView = (propValue) => {
                           src={editableData.Car_Image[index].imgUrl}
                           alt=""
                         />
-                      ) : index === 6 ? (
-                        // Display the upload button at the 7th position
-                        <span className="w-full h-full md:text-5xl text-xl text-gray-500 justify-center flex group items-center rounded-md">
-                          <input
-                            onChange={(event) =>
-                              handleImageUpload(event, null, true)
-                            }
-                            className="md:text-xs md:border h-full absolute w-full text-xl text-gray-500 justify-center flex items-center rounded-md opacity-0 cursor-pointer"
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            required
-                            name="Car_Image"
-                          />
-                          <span className="cursor-pointer group-active:text-white">
-                            <AiFillFolderAdd />
-                          </span>
-                          <span className="text-lg"> Upload</span>
-                        </span>
-                      ) : ""
+                      ) : (
+                        ""
+                      )
                     ) : (
                       ""
                     )}
                   </span>
                 ))}
-                 {isImageUploadedFromMultiple ? ( <div className="flex  gap-4 justify-center w-full flex-row">
-              <div className="img_updating_btn  flex items-center justify-center ">
-                <button
-                  type="button"
-                  className="btn btn-outline-info h-8 p-1 text-xs text-black uppercase font-semibold"
-                  onClick={() => handleSaveData(false, false, true)}
-                >
-                  Update
-                </button>
-              </div>
-              <div className="img_updating_btn  flex items-center justify-center ">
-                <button
-                  type="button"
-                  className="btn btn-outline-danger h-8 p-1 text-xs text-black uppercase font-semibold"
-                  onClick={() => handleClearMultipleImage()}
-                >
-                  Cancel
-                </button>
-              </div>
-              </div>
-            ) : (
-              ""
-            )}
+
+                {isImageUploadedFromMultiple ? (
+                  <div className="flex  gap-4 justify-center w-full flex-row">
+                    <div className="img_updating_btn  flex items-center justify-center ">
+                      <button
+                        type="button"
+                        className="btn btn-outline-info h-8 p-1 text-xs text-black uppercase font-semibold"
+                        onClick={() => handleSaveData(false, false, true)}
+                      >
+                        Update
+                      </button>
+                    </div>
+                    <div className="img_updating_btn  flex items-center justify-center ">
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger h-8 p-1 text-xs text-black uppercase font-semibold"
+                        onClick={() => handleClearMultipleModeData()}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
               </section>
             )}
-
-           
           </div>
 
           <span
@@ -657,7 +793,7 @@ const SingleView = (propValue) => {
                 ? "  absolute left-56  md:border md:h-12  flex justify-center items-center md:hidden top-6  w-16  "
                 : "hidden"
             }
-            onClick={handleClosePanel}
+            onClick={handleDesableEditing}
           >
             <button
               type="button"
@@ -672,7 +808,7 @@ const SingleView = (propValue) => {
                 ? " md:bottom-0 md:border md:h-12  absolute left-64 text-green-800 flex justify-center items-center top-6  w-16 md:hidden "
                 : "hidden"
             }
-            onClick={() => handleSaveData(true, false,false)}
+            onClick={() => handleSaveData(true, false, false)}
           >
             <button
               type="button"

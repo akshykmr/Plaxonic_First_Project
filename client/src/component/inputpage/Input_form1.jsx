@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import './Input_form.scss';
 // import Compressor from 'compressorjs';
 import randomAutoFillData from './randomInputData/autoFillData';
 // import axios from 'axios';
@@ -35,8 +34,8 @@ const InputSection = ({ index, handleOnChange, titles, placeholders, formData })
    const type = index === 2 ? "number" : "text";
 
   return (
-    <div className="input-group input-group-sm mb-4">
-      <span className="input-group-text">{titles[index]}</span>
+    <div className="input-group input-group-sm mb-4 mt-2 ">
+      <span className="input-group-text w-24 mr-3">{titles[index]}</span>
       <input
         onChange={handleOnChange}
         value={value}
@@ -85,7 +84,6 @@ const Input_form = () => {
 
     const [formSubmitted, setFormSubmitted] = React.useState(false);
     const [message, setMessage] = React.useState();
-    const [responseCount, setResponseCount] = React.useState(0);
     const fileInputRef = React.useRef(null);
 
 
@@ -109,28 +107,17 @@ const Input_form = () => {
 
           const files = Array.from(event.target.files);
           // const newList = [...formData.Car_Image];
+          if (files.length > 12) {
+            alert('You can only choose up to 6 files.');
+            return;
+          }
           setformData((prevData) => ({
             ...prevData,
             Car_Image: files,
           }));
         };
-        console.log("final formdata",formData.Car_Image);
-
-
-    
-      // useEffect(() => {
-      //   const fetchResponseCount = async () => {
-      //     try {
-      //       const response = await axios.get(dbURL+'/count');
-      //       setResponseCount(response.data.count);
-      //     } catch (error) {
-      //       console.error('Error fetching response count:', error);
-      //     }
-      //   };
-    
-      //   fetchResponseCount();
-      // }, []);
-      
+        // console.log("final formdata",formData.Car_Image);
+     
       const SubmitValidation = async (e) => {
           e.preventDefault(); 
           setFormSubmitted(true);
@@ -145,14 +132,13 @@ const Input_form = () => {
             for (let i = 0; i < formData.Car_Image.length; i++) {
               formDataToSubmit.append('Car_Image', formData.Car_Image[i]);
             }
-            setResponseCount((prevCount) => prevCount + 1);
-            setMessage(`${responseCount + 1} response${responseCount === 0 ? '' : 's'} ${responseCount === 0 ? 'has' : 'have'} been submitted.`);
+            setMessage('Response has been submitted');
 
             const response = await fetch(dbURL, {
                 method: 'POST',
                 body: formDataToSubmit,
               }); 
-            
+
               if (!response.ok) {
                 throw new Error('Request failed');
               }
@@ -189,9 +175,9 @@ const Input_form = () => {
 
     return (
       <form onSubmit={SubmitValidation}>
-        <div className="form-page">
-          <div className="form-container">
-            <div className="form-inputs">
+        <div className="form-page md:w-full md:h-[calc(100vh-8vh)] md:flex md:justify-around md:items-center md:bg-slate-300  w-94% flex ml-auto mr-auto md:mt-0 mt-8 ">
+          <div className="form-container  md:h-90% md:bg-opacity-50 md:bg-gray-400  rounded-3xl md:shadow-lg md:p-8  md:w-35% w-100%   ">
+            <div className="form-inputs flex flex-col mt-8 gap-2 mb-6">
               {[...Array(5)].map((_, index) => {
                     return (
                       <InputSection
@@ -204,13 +190,13 @@ const Input_form = () => {
                       />
                     );
               })}
-              <div className="input-group-img input-group-sm  mb-4">
-                <input type="file" accept="image/*" multiple onChange={handleFileChange} required name="Car_Image" ref={fileInputRef}/>
+              <div className="input-group-img input-group-sm ml-auto mr-auto mb-4">
+                <input className="bg-blue-500 rounded " type="file" accept="image/*" multiple onChange={handleFileChange} required name="Car_Image" ref={fileInputRef}/>
               </div>
-              <button  type="submit" className="btn btn-outline-success" >Submit</button>
-              <input type="button" className="btn btn-outline-primary" onClick={autofillData} value="autofill" />
+              <button  type="submit" className="btn btn-outline-success w-24 ml-auto mr-auto" >Submit</button>
+              <input type="button" className="btn btn-outline-primary w-24 ml-auto mr-auto " onClick={autofillData} value="autofill" />
 
-              <span className='message-text'>{message}</span>
+              <span className='message-text mx-auto w-403px justify-center text-center font-medium text-18'>{message}</span>
             </div>
           </div>
         </div>

@@ -29,8 +29,19 @@ const ListViewOutput = () => {
       const response = await axios.get("http://localhost:5000/entries");
       const receivedData = response.data;
       setOutputData(receivedData);
+
+      // Find the first valid image URL as thumbnail for each item in receivedData
+      const thumbnailsArray = receivedData.map((data) => {
+        for (let i = 0; i < data.Car_Image.length; i++) {
+          if (data.Car_Image[i].imgUrl !== "result.url") {
+            return data.Car_Image[i].imgUrl;
+          }
+        }
+        return null; // If no valid image URL is found for an item
+      });
+
+      setThumbnails(thumbnailsArray);
       setDataforFilter(receivedData);
-      // console.log("this is imported data", receivedData);
     } catch (error) {
       console.log("Error:", error);
     }
@@ -99,7 +110,16 @@ const ListViewOutput = () => {
   };
 
   const handleRemoveAllItemsList = async () => {
-    if (outputData && selectedItems.length > 0) {
+    if (selectedItems.length === 0) {
+      alert('Please select at least one item to delete.');
+      return;
+    }
+  
+    const confirmDel = window.confirm(
+      'Are you sure you want to delete the selected items?'
+    );
+  
+    if (confirmDel) {
       setClickAction(true);
       try {
         await Promise.all(
@@ -108,21 +128,19 @@ const ListViewOutput = () => {
               objectId: outputData[index]._id,
               objectImageDetails: outputData[index].Car_Image,
             };
-            return axios.delete(
-              `http://localhost:5000/entries/${objectData.objectId}`,
-              {
-                data: objectData,
-              }
-            );
+            return axios.delete(`http://localhost:5000/entries/${objectData.objectId}`, {
+              data: objectData,
+            });
           })
         );
-        console.log("All objects deleted successfully");
+        console.log('All objects deleted successfully');
       } catch (error) {
-        console.error("Error deleting objects:", error);
+        console.error('Error deleting objects:', error);
       }
       setSelectedItems([]);
     }
   };
+  
 
   useEffect(() => {
     if (outputData && outputData.length > 0) {
@@ -141,6 +159,7 @@ const ListViewOutput = () => {
   const [selectFuelType, setSelectFuelType] = useState();
   const [isVisible, setIsVisible] = useState(false);
   const [alertType, setAlertType] = useState(0);
+  const [thumbnails, setThumbnails] = useState([]);
 
   const handleSelectCarName = (e) => {
     setSelectCarName(e.target.value);
@@ -390,7 +409,11 @@ const ListViewOutput = () => {
                       <li onClick={() => handleOpenItem(index)}>{index + 1}</li>
                       <li>
                         <span onClick={() => handleOpenItem(index)}>
-                          <img src={outputData.Car_Image[0].imgUrl} alt="" />
+                          {thumbnails[index] ? (
+                            <img src={thumbnails[index]} alt="" />
+                          ) : (
+                            <div>No Image</div>
+                          )}
                         </span>
                       </li>
                       <li onClick={() => handleOpenItem(index)}>
